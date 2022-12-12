@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography.X509Certificates;
 using System.Xml.Serialization;
 
@@ -117,7 +118,7 @@ namespace PasswordStuff
             {
                 Console.WriteLine("[" + whichIndex + "]\n");
                 Console.WriteLine("NAME");
-                Console.WriteLine(user.UserName+ " " + user.Password + "\n");
+                Console.WriteLine(user.FirstName+ " " + user.LastName + "\n");
                 Console.WriteLine("EMAIL");
                 Console.WriteLine(user.Email + "\n");
                 Console.WriteLine("USERNAME");
@@ -130,18 +131,128 @@ namespace PasswordStuff
                 Console.WriteLine("USER: " + user.AccessLevelOne + "\n\n\n");
                 whichIndex++;
             }
+
+            
         }
     
 
 
-    public static void EditUser()
+    public static void ChangeUsername()
     {
-        Console.WriteLine("Editing");
+
+            var json = CreateUserFile.GetJson();
+            int num = 0;
+            ShowAllUsers();
+            Console.WriteLine("SELECT USER ABOVE");
+            var choice = Console.ReadLine();
+
+            bool valid = int.TryParse(choice, out num);
+            if (!valid)
+            {
+                Console.WriteLine("You have to choose a number.");
+                return;
+            }
+
+            Console.WriteLine("ENTER NEW USERNAME");
+            var newUserName = Console.ReadLine();
+
+            if (String.IsNullOrEmpty(newUserName))
+            {
+                Console.WriteLine("You have to enter new username");
+                return;
+            }
+
+            json[num].UserName = newUserName;
+            CreateUserFile.UpDate(json);
+
+
+        
     }
 
 
+    public static void ChangePassword()
+        {
+            var json = CreateUserFile.GetJson();
+            int num = 0;
+            ShowAllUsers();
+            Console.WriteLine("SELECT USER ABOVE");
+            var choice = Console.ReadLine();
+
+            bool valid = int.TryParse(choice, out num);
+            if (!valid)
+            {
+                Console.WriteLine("You have to choose a number.");
+                return;
+            }
+
+            Console.WriteLine("ENTER NEW PASSWORD");
+            var newPassword = Console.ReadLine();
+
+            if (String.IsNullOrEmpty(newPassword))
+            {
+                Console.WriteLine("You have to enter new password");
+                return;
+            }
+
+            json[num].Password = newPassword;
+            CreateUserFile.UpDate(json);
+
+        }
+
+        public static void ChangeName()
+        {
+
+            var json = CreateUserFile.GetJson();
+            int num = 0;
+            ShowAllUsers();
+            Console.WriteLine("SELECT USER ABOVE");
+            var choice = Console.ReadLine();
+
+            bool valid = int.TryParse(choice, out num);
+            if (!valid)
+            {
+                Console.WriteLine("You have to choose a number.");
+                return;
+            }
+
+            Console.WriteLine("ENTER NEW FIRST NAME");
+            var newFirstName = Console.ReadLine();
+    
+            if (String.IsNullOrEmpty(newFirstName))
+            {
+                Console.WriteLine("You have to enter new firstname");
+                return;
+            }
+
+            Console.WriteLine("ENTER NEW LAST NAME");
+            var newLastName = Console.ReadLine();
+            
+            if (String.IsNullOrEmpty(newLastName))
+            {
+                Console.WriteLine("You have to enter new last name");
+                return;
+            }
+
+            json[num].FirstName= newFirstName;
+            json[num].LastName= newLastName;    
+
+            CreateUserFile.UpDate(json);
+
+
+        }
+
+
+        public static void ChangeEmail()
+        {
+
+        }
 
 
 
-}
+
+
+
+
+
+    }
 }
