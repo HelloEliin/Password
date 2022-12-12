@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Security.Cryptography.X509Certificates;
 using System.Xml.Serialization;
 
 namespace PasswordStuff
@@ -109,18 +110,38 @@ namespace PasswordStuff
 
         public static void ShowAllUsers()
         {
-            Console.WriteLine("Showing all");
+            var json = CreateUserFile.GetJson();
+            int whichIndex = 0;
+
+            foreach (var user in json)
+            {
+                Console.WriteLine("[" + whichIndex + "]\n");
+                Console.WriteLine("NAME");
+                Console.WriteLine(user.UserName+ " " + user.Password + "\n");
+                Console.WriteLine("EMAIL");
+                Console.WriteLine(user.Email + "\n");
+                Console.WriteLine("USERNAME");
+                Console.WriteLine(user.UserName + "\n");
+                Console.WriteLine("PASSWORD");
+                Console.WriteLine(user.Password + "\n");
+                Console.WriteLine("ACCESSLEVEL");
+                Console.WriteLine("ADMIN : " + user.AccessLevelAdm);
+                Console.WriteLine("MODERATOR : " + user.AccessLevelMod);
+                Console.WriteLine("USER: " + user.AccessLevelOne + "\n\n\n");
+                whichIndex++;
+            }
         }
+    
 
 
-        public static void EditUser()
-        {
-            Console.WriteLine("Editing");
-        }
-
-
-
-
-
+    public static void EditUser()
+    {
+        Console.WriteLine("Editing");
     }
+
+
+
+
+
+}
 }

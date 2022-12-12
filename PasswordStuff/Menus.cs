@@ -68,7 +68,7 @@ namespace PasswordStuff
 
             }
 
-            var choice = Console.ReadLine().ToLower();
+            var choice = Console.ReadLine();
 
 
 
