@@ -28,36 +28,56 @@ namespace PasswordStuff
         {
             var json = CreateUserFile.GetJson();
 
-            Console.WriteLine("\nENTER USERNAME");
+            Console.WriteLine("\nENTER USERNAME (OR PRESS 'Q' TO QUIT)");
             var userName = Console.ReadLine();
-            bool usernameAvalible = IfUserNameIsAvalible(userName);
+
+            if(userName == "q" || userName == "Q")
+            {
+                return;
+            }
+
+            bool usernameAvalible = IsUserNameAvalible(userName);
             if (!usernameAvalible)
             {
                 Console.WriteLine("\nSomeone else already uses this username");
-                CreateNewUser();
+                return;
             }
+
             if (string.IsNullOrEmpty(userName))
             {
                 Console.WriteLine("You have to choose username");
-                CreateNewUser();
+                return;
             }
 
             Console.WriteLine("\nENTER YOUR FIRSTNAME");
             var firstName = Console.ReadLine();
+            if (firstName == "q" || firstName == "Q")
+            {
+                return;
+            }
             if (string.IsNullOrEmpty(firstName))
             {
                 Console.WriteLine("\n\nYou have to enter a firstname");
-                CreateNewUser();
+                return;
             }
             Console.WriteLine("\nENTER YOUR LASTNAME");
             var lastName = Console.ReadLine();
+            if (lastName == "q" || lastName == "Q")
+            {
+                return;
+            }
             if (string.IsNullOrEmpty(lastName))
             {
                 Console.WriteLine("\nYou have to enter lastname");
-                CreateNewUser();
+                return;
             }
             Console.WriteLine("\nENTER YOUR EMAIL");
             var email = Console.ReadLine();
+
+            if (email == "q" || email == "Q")
+            {
+                return;
+            }
 
             bool emailUsed = IfMailAlreadyExists(email);
 
@@ -70,7 +90,7 @@ namespace PasswordStuff
             if (!email.Contains("@") || !email.Contains(".") || string.IsNullOrEmpty(email))
             {
                 Console.WriteLine("\nInvalid emailadress");
-                CreateNewUser();
+                return;
             }
 
 
@@ -81,24 +101,24 @@ namespace PasswordStuff
             if (password.Length < 8)
             {
                 Console.WriteLine("\nToo short");
-                CreateNewUser();
+                return;
             }
      
             else if (password.Any(char.IsSymbol) == false && password.Any(char.IsUpper) == false)
             {
                 Console.WriteLine("Symbol and big letter requierd");
-                CreateNewUser();
+                return;
             }
             else if (password.Any(char.IsSymbol) == false)
             {
                 Console.WriteLine("\nSymbol requierd");
-                CreateNewUser();
+                return;
             }
 
             else if(password.Any(char.IsUpper) == false)
             {
                 Console.WriteLine("\nBig letter requierd");
-                CreateNewUser();
+                return;
             }
             else
             {
@@ -130,7 +150,7 @@ namespace PasswordStuff
         public static void ShowMyUserInfo(int user)
         {
             var json = CreateUserFile.GetJson();
-            Console.WriteLine("PRESS 'Q' TO GO BACK TO MENU" +
+            Console.WriteLine("\n\nPRESS ENTER TO GO BACK TO MENU" +
                 "\n\n\nMY NAME\n" +
                 json[user].FirstName + " " + json[user].LastName + "\n\n" +
                 "MY EMAIL\n" +
@@ -142,14 +162,10 @@ namespace PasswordStuff
 
             var choice = Console.ReadLine().ToLower();
 
-            if (choice == "q")
+            if (choice == "")
             {
                 Menus.UserSystemMenu(user);
-            }
-            else
-            {
-                Console.WriteLine("PRESS 'Q' TO GO BACK TO MENU.");
-                ShowMyUserInfo(user);
+                return;
             }
 
 
@@ -162,8 +178,13 @@ namespace PasswordStuff
         {
             var json = CreateUserFile.GetJson();
             ShowAllUsers();
-            Console.WriteLine("SELECT USER ABOVE (OR PRESS ENTER TO QUIT)");
+            Console.WriteLine("SELECT USER ABOVE (OR PRESS 'Q TO QUIT)");
             var choice = Console.ReadLine();
+
+            if (choice == "q" || choice == "Q")
+            {
+                return;
+            }
             int num = 0;
 
 
@@ -207,8 +228,13 @@ namespace PasswordStuff
         {
             var json = CreateUserFile.GetJson();
             ShowAllUsers();
-            Console.WriteLine("SELECT USER ABOVE (OR PRESS ENTER TO QUIT)");
+            Console.WriteLine("SELECT USER ABOVE (OR PRESS 'Q' TO QUIT)");
             var choice = Console.ReadLine();
+
+            if (choice == "q" || choice == "Q")
+            {
+                return;
+            }
             int num = 0;
 
 
@@ -251,8 +277,12 @@ namespace PasswordStuff
         {
             var json = CreateUserFile.GetJson();
             ShowAllUsers();
-            Console.WriteLine("SELECT USER ABOVE (OR PRESS ENTER TO QUIT)");
+            Console.WriteLine("SELECT USER ABOVE (OR PRESS 'Q' TO QUIT)");
             var choice = Console.ReadLine();
+            if (choice == "q" || choice == "Q")
+            {
+                return;
+            }
             int num = 0;
 
 
@@ -313,8 +343,12 @@ namespace PasswordStuff
             var json = CreateUserFile.GetJson();
             int num = 0;
             ShowAllUsers();
-            Console.WriteLine("SELECT USER ABOVE (OR PRESS ENTER TO QUIT)");
+            Console.WriteLine("SELECT USER ABOVE (OR PRESS 'Q TO QUIT)");
             var choice = Console.ReadLine();
+            if (choice == "q" || choice == "Q")
+            {
+                return;
+            }
 
             bool valid = int.TryParse(choice, out num);
             if (!valid)
@@ -345,8 +379,12 @@ namespace PasswordStuff
             var json = CreateUserFile.GetJson();
             int num = 0;
             ShowAllUsers();
-            Console.WriteLine("SELECT USER ABOVE (OR PRESS ENTER TO QUIT)");
+            Console.WriteLine("SELECT USER ABOVE (OR PRESS 'Q' TO QUIT)");
             var choice = Console.ReadLine();
+            if (choice == "q" || choice == "Q")
+            {
+                return;
+            }
 
             bool valid = int.TryParse(choice, out num);
             if (!valid)
@@ -379,8 +417,13 @@ namespace PasswordStuff
             var json = CreateUserFile.GetJson();
             int num = 0;
             ShowAllUsers();
-            Console.WriteLine("SELECT USER ABOVE");
+            Console.WriteLine("SELECT USER ABOVE (OR PRESS 'Q' TO QUIT)");
             var choice = Console.ReadLine();
+
+            if (choice == "q" || choice == "Q")
+            {
+                return;
+            }
 
             bool valid = int.TryParse(choice, out num);
             if (!valid)
@@ -391,7 +434,7 @@ namespace PasswordStuff
             var existingUser = IfUserExists(num);
             if (!existingUser)
             {
-                return;
+                ChangeName();
             }
 
             Console.WriteLine("ENTER NEW FIRST NAME");
@@ -426,8 +469,12 @@ namespace PasswordStuff
             var json = CreateUserFile.GetJson();
             int num = 0;
             ShowAllUsers();
-            Console.WriteLine("SELECT USER ABOVE");
+            Console.WriteLine("SELECT USER ABOVE (OR PRESS 'Q' TO QUIT)");
             var choice = Console.ReadLine();
+            if (choice == "q" || choice == "Q")
+            {
+                return;
+            }
 
             bool valid = int.TryParse(choice, out num);
             if (!valid)
@@ -488,7 +535,7 @@ namespace PasswordStuff
         }
 
 
-        public static bool IfUserNameIsAvalible(string username)
+        public static bool IsUserNameAvalible(string username)
         {
             var json = CreateUserFile.GetJson();
             for (int i = 0; i < json.Count; i++)
