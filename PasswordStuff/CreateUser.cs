@@ -46,12 +46,14 @@ namespace PasswordStuff
             if (string.IsNullOrEmpty(firstName))
             {
                 Console.WriteLine("\n\nYou have to enter a firstname");
+                CreateNewUser();
             }
             Console.WriteLine("\nENTER YOUR LASTNAME");
             var lastName = Console.ReadLine();
             if (string.IsNullOrEmpty(lastName))
             {
                 Console.WriteLine("\nYou have to enter lastname");
+                CreateNewUser();
             }
             Console.WriteLine("\nENTER YOUR EMAIL");
             var email = Console.ReadLine();
@@ -67,7 +69,7 @@ namespace PasswordStuff
             if (!email.Contains("@") || !email.Contains(".") || string.IsNullOrEmpty(email))
             {
                 Console.WriteLine("\nInvalid emailadress");
-                return;
+                CreateNewUser();
             }
 
 
