@@ -2,8 +2,6 @@
 
 namespace PasswordStuff
 {
-    internal partial class Program
-    {
         public class SignIn
         {
 
@@ -52,4 +50,3 @@ namespace PasswordStuff
 
         }
     }
-}

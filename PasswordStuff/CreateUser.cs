@@ -284,7 +284,7 @@ namespace PasswordStuff
             foreach (var user in json)
             {
                 Console.WriteLine("\n\n\n[" + whichIndex + "]\n\n" +
-                    "NAME\n" + user.FirstName + " " + user.LastName + "\n" +
+                    "NAME\n" + user.FirstName + " " + user.LastName + "\n\n" +
                     "EMAIL\n" + user.Email + "\n\n" +
                     "USERNAME\n" + user.UserName + "\n\n" +
                     "PASSWORD\n" + user.Password + "\n\n" +
@@ -509,9 +509,21 @@ namespace PasswordStuff
 
                 }
 
+                else if (info.Key == ConsoleKey.Backspace)
+                {
+                    if (!string.IsNullOrEmpty(password))
+                    {
+                        password = password.Substring(0, password.Length - 1);
+                        int pos = Console.CursorLeft;
+                        Console.SetCursorPosition(pos - 1, Console.CursorTop);
+                        Console.Write(" ");
+                        Console.SetCursorPosition(pos - 1, Console.CursorTop);
+                    }
+                }
                 info = Console.ReadKey(true);
-            }
 
+            }
+          
             Console.WriteLine();
             return password;
         }
