@@ -1,1 +1,62 @@
-[{"FirstName":"Elin","LastName":"Holm","UserName":"admin","Email":"elin@gmail.com","Password":"admin","AccessLevelOne":false,"AccessLevelMod":false,"AccessLevelAdm":true},{"FirstName":"Elin","LastName":"Holm","UserName":"mod","Email":"elin@gmail.com","Password":"mod","AccessLevelOne":false,"AccessLevelMod":true,"AccessLevelAdm":false},{"FirstName":"Kerstin","LastName":"Cool","UserName":"User","Email":"elin@gmail.com","Password":"user1","AccessLevelOne":true,"AccessLevelMod":false,"AccessLevelAdm":false}]
+[
+  {
+    "FirstName": "Elin",
+    "LastName": "Holm",
+    "UserName": "admin",
+    "Email": "elin.ronnback@gmail.com",
+    "Password": "admin",
+    "AccessLevelOne": false,
+    "AccessLevelMod": false,
+    "AccessLevelAdm": true
+  },
+  {
+    "FirstName": "Elin",
+    "LastName": "Holm",
+    "UserName": "HelloElin",
+    "Email": "",
+    "Password": "kjaso",
+    "AccessLevelOne": true,
+    "AccessLevelMod": false,
+    "AccessLevelAdm": false
+  },
+  {
+    "FirstName": "elin",
+    "LastName": "holm",
+    "UserName": "HelloELin",
+    "Email": "sss",
+    "Password": "kkkkkkkk",
+    "AccessLevelOne": true,
+    "AccessLevelMod": false,
+    "AccessLevelAdm": false
+  },
+  {
+    "FirstName": "e\u00F6ojm",
+    "LastName": "efo\u00F6e",
+    "UserName": "helloelin",
+    "Email": "wgwegw",
+    "Password": "jjjjjjjj",
+    "AccessLevelOne": true,
+    "AccessLevelMod": false,
+    "AccessLevelAdm": false
+  },
+  {
+    "FirstName": "elin",
+    "LastName": "elin",
+    "UserName": "elin",
+    "Email": "fff@com",
+    "Password": "c",
+    "AccessLevelOne": true,
+    "AccessLevelMod": false,
+    "AccessLevelAdm": false
+  },
+  {
+    "FirstName": "elin",
+    "LastName": "elin",
+    "UserName": "elin",
+    "Email": "elin@.com",
+    "Password": "",
+    "AccessLevelOne": true,
+    "AccessLevelMod": false,
+    "AccessLevelAdm": false
+  }
+]
