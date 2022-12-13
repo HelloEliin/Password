@@ -9,9 +9,10 @@ namespace PasswordStuff
 
         public static void FrontPageMenu()
         {
-            Console.WriteLine("\n\n\n\nWELCOME\n\n" +
+            Console.WriteLine("\n\n\n\nUSERSYSTEM\n\n" +
                 "[S]IGN IN \n" +
-                "[C]REATE ACCOUNT");
+                "[C]REATE ACCOUNT \n" +
+                "[Q]UIT PROGRAM");
 
         }
 
@@ -38,6 +39,7 @@ namespace PasswordStuff
                 "[2] VIEW ALL USERS\n" +
                 "[3] MENU FOR USERS\n" +
                 "[4] CREATE NEW USER\n" +
+                "[5] SHOW ALL MODS\n" +
                 "[10] SIGN OUT");
         }
 
@@ -192,6 +194,9 @@ namespace PasswordStuff
                         Menus.UserSystemMenu(userIndex);
                     }
 
+                    break;
+                case "5": CreateUser.ShowAllMods();
+                    Menus.UserSystemMenu(userIndex);
                     break;
                 case "10":
                     break;

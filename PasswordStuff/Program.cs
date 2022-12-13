@@ -37,6 +37,9 @@ namespace PasswordStuff
                         break;
                     case "c": CreateUser.CreateNewUser();
                         break;
+                    case "q":
+                        isRunning= false;
+                        break;
 
                     default:
                         Console.WriteLine("\nChoose option.");

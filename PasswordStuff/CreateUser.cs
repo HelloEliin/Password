@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
@@ -80,20 +81,24 @@ namespace PasswordStuff
             if (password.Length < 8)
             {
                 Console.WriteLine("\nToo short");
-                return;
+                CreateNewUser();
             }
-    
-
+     
+            else if (password.Any(char.IsSymbol) == false && password.Any(char.IsUpper) == false)
+            {
+                Console.WriteLine("Symbol and big letter requierd");
+                CreateNewUser();
+            }
             else if (password.Any(char.IsSymbol) == false)
             {
                 Console.WriteLine("\nSymbol requierd");
-                return;
+                CreateNewUser();
             }
 
             else if(password.Any(char.IsUpper) == false)
             {
                 Console.WriteLine("\nBig letter requierd");
-                return;
+                CreateNewUser();
             }
             else
             {
@@ -157,7 +162,7 @@ namespace PasswordStuff
         {
             var json = CreateUserFile.GetJson();
             ShowAllUsers();
-            Console.WriteLine("SELECT USER ABOVE");
+            Console.WriteLine("SELECT USER ABOVE (OR PRESS ENTER TO QUIT)");
             var choice = Console.ReadLine();
             int num = 0;
 
@@ -169,10 +174,10 @@ namespace PasswordStuff
                 return;
             }
 
-            Console.WriteLine("SELECT NEW ACCESSLEVEL");
+            Console.WriteLine("SELECT NEW ACCESSLEVEL\n");
             Console.WriteLine(
-                "[1] ACCESSLEVEL MODERATOR" +
-                "[2] ACCESSLEVEL ADMIN");
+                "[1] ACCESSLEVEL MODERATOR\n" +
+                "[2] ACCESSLEVEL ADMIN\n\n");
 
             var whatAccess = Console.ReadLine();
 
@@ -191,7 +196,7 @@ namespace PasswordStuff
                 json[num].AccessLevelOne = false;
             }
 
-            Console.WriteLine("USER IS PROMOTED");
+            Console.WriteLine("\n\nUSER IS PROMOTED");
 
             CreateUserFile.UpDate(json);
         }
@@ -202,7 +207,7 @@ namespace PasswordStuff
         {
             var json = CreateUserFile.GetJson();
             ShowAllUsers();
-            Console.WriteLine("SELECT USER ABOVE");
+            Console.WriteLine("SELECT USER ABOVE (OR PRESS ENTER TO QUIT)");
             var choice = Console.ReadLine();
             int num = 0;
 
@@ -214,10 +219,10 @@ namespace PasswordStuff
                 return;
             }
 
-            Console.WriteLine("SELECT NEW ACCESSLEVEL");
+            Console.WriteLine("SELECT NEW ACCESSLEVEL\n");
             Console.WriteLine(
-                "[1] ACCESSLEVEL ONE\n" +
-                "[2] ACCESSLEVEL MODERATOR\n");
+                "\n[1] ACCESSLEVEL ONE\n" +
+                "\n[2] ACCESSLEVEL MODERATOR\n");
 
             var whatAccess = Console.ReadLine();
 
@@ -246,7 +251,7 @@ namespace PasswordStuff
         {
             var json = CreateUserFile.GetJson();
             ShowAllUsers();
-            Console.WriteLine("SELECT USER ABOVE");
+            Console.WriteLine("SELECT USER ABOVE (OR PRESS ENTER TO QUIT)");
             var choice = Console.ReadLine();
             int num = 0;
 
@@ -308,7 +313,7 @@ namespace PasswordStuff
             var json = CreateUserFile.GetJson();
             int num = 0;
             ShowAllUsers();
-            Console.WriteLine("SELECT USER ABOVE");
+            Console.WriteLine("SELECT USER ABOVE (OR PRESS ENTER TO QUIT)");
             var choice = Console.ReadLine();
 
             bool valid = int.TryParse(choice, out num);
@@ -331,7 +336,7 @@ namespace PasswordStuff
             CreateUserFile.UpDate(json);
 
 
-
+             
         }
 
 
@@ -340,7 +345,7 @@ namespace PasswordStuff
             var json = CreateUserFile.GetJson();
             int num = 0;
             ShowAllUsers();
-            Console.WriteLine("SELECT USER ABOVE");
+            Console.WriteLine("SELECT USER ABOVE (OR PRESS ENTER TO QUIT)");
             var choice = Console.ReadLine();
 
             bool valid = int.TryParse(choice, out num);
@@ -532,6 +537,33 @@ namespace PasswordStuff
 
             return password;
         }
+
+
+
+        public static void ShowAllMods()
+        {
+            var json = CreateUserFile.GetJson();
+            for (int i = 0; i < json.Count; i++)
+            {
+                if (json[i].AccessLevelMod == true)
+                {
+                    Console.WriteLine("\n\nIS MOD\n(USERNAME)\n\n" + json[i].UserName);
+                }
+
+            }
+
+            var isThereAnyMods = json.All(x => x.AccessLevelMod == false);
+            if (isThereAnyMods)
+            {
+                Console.WriteLine("\n\nNO MODS IN THIS SYSTEM");
+            }
+
+        }
+
+
+
+
+
 
 
 
