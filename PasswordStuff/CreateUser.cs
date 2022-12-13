@@ -161,14 +161,11 @@ namespace PasswordStuff
                 json[user].Password);
 
             var choice = Console.ReadLine().ToLower();
-
             if (choice == "")
             {
                 Menus.UserSystemMenu(user);
                 return;
             }
-
-
         }
 
 
@@ -434,7 +431,7 @@ namespace PasswordStuff
             var existingUser = IfUserExists(num);
             if (!existingUser)
             {
-                ChangeName();
+                return;
             }
 
             Console.WriteLine("ENTER NEW FIRST NAME");
@@ -608,6 +605,35 @@ namespace PasswordStuff
         }
 
 
+        public static void SearchUser()
+        {
+            var json = CreateUserFile.GetJson();
+            Console.WriteLine("ENTER USERNAME TO SEARCH FOR\n");
+            var userToSearch = Console.ReadLine();
+
+            for (int i = 0; i < json.Count; i++)
+            {
+                if (json[i].UserName == userToSearch)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("\n\nUSER FOUND\n");
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.WriteLine(json[i].UserName + "\n\n" +
+                        "AT POSITION  " + "[" + i + "]" + "  IN USERFILE");
+                    return;
+                }
+            }
+            var isUserExisting = json.All(x => x.UserName == userToSearch);
+            if (!isUserExisting)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("NO MATCHES FOUND");
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+            
+
+
+        }
 
 
 

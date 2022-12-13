@@ -1,1 +1,22 @@
-[{"FirstName":"Elin","LastName":"Holm","UserName":"admin","Email":"elin.ronnback@gmail.com","Password":"admin","AccessLevelOne":false,"AccessLevelMod":false,"AccessLevelAdm":true},{"FirstName":"mod","LastName":"mod","UserName":"mod","Email":"mod.@","Password":"Moddy\u002B\u002B\u002B","AccessLevelOne":false,"AccessLevelMod":true,"AccessLevelAdm":false}]
+[
+  {
+    "FirstName": "Elin",
+    "LastName": "Holm",
+    "UserName": "admin",
+    "Email": "elin.ronnback@gmail.com",
+    "Password": "admin",
+    "AccessLevelOne": false,
+    "AccessLevelMod": false,
+    "AccessLevelAdm": true
+  },
+  {
+    "FirstName": "mod",
+    "LastName": "mod",
+    "UserName": "mod",
+    "Email": "mod.@",
+    "Password": "Moddy\u002B\u002B\u002B",
+    "AccessLevelOne": false,
+    "AccessLevelMod": true,
+    "AccessLevelAdm": false
+  }
+]

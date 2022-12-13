@@ -52,7 +52,8 @@ namespace PasswordStuff
                 "[4] DELETE USER\n" +
                 "[5] CREATE NEW USER\n" +
                 "[6] PROMOTE USER\n" +
-                "[7] DEMOTE USER\n\n");
+                "[7] DEMOTE USER\n" +
+                "[8] SEARCH USER\n\n");
 
             var choice = Console.ReadLine();
 
@@ -77,6 +78,9 @@ namespace PasswordStuff
                     break;
                 case "7":
                     CreateUser.DemoteUser();
+                    break;
+                case "8":
+                    CreateUser.SearchUser();
                     break;
                 default: Console.WriteLine("Try again.");
                     break;
