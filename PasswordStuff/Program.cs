@@ -29,8 +29,6 @@ namespace PasswordStuff
                         {
                             Menus.UserSystemMenu(userIndex);
                         }
-
-                       
                         
                         break;
                     case "c": CreateUser.CreateNewUser();

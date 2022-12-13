@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json.Nodes;
@@ -34,6 +35,11 @@ namespace PasswordStuff
                 Console.WriteLine("\nSomeone else already uses this username");
                 CreateNewUser();
             }
+            if (string.IsNullOrEmpty(userName))
+            {
+                Console.WriteLine("You have to choose username");
+                CreateNewUser();
+            }
 
             Console.WriteLine("\nENTER YOUR FIRSTNAME");
             var firstName = Console.ReadLine();
@@ -55,36 +61,42 @@ namespace PasswordStuff
             if (emailUsed)
             {
                 Console.WriteLine("\nThere is already a account with this email");
-                CreateNewUser();
+                return;
             }
 
             if (!email.Contains("@") || !email.Contains(".") || string.IsNullOrEmpty(email))
             {
                 Console.WriteLine("\nInvalid emailadress");
-                CreateNewUser();
+                return;
             }
 
 
-            Console.WriteLine("ENTER A PASSWORD. (MIN 8 LETTERS, 1 BIG LETTER AND ONE SYMBOL)");
-            var password = Console.ReadLine();
-            if(password.Length < 8)
+            Console.WriteLine("\nENTER A PASSWORD. (MIN 8 LETTERS, 1 BIG LETTER AND ONE SYMBOL)");
+            var password = ReadPassword();
+
+
+            if (password.Length < 8)
             {
                 Console.WriteLine("\nToo short");
-                CreateNewUser();
+                return;
             }
-            if (!password.Any(char.IsUpper));
+    
+
+            else if (password.Any(char.IsSymbol) == false)
             {
-                Console.WriteLine("\nAtleast one big letter requierd");
-                CreateNewUser();
+                Console.WriteLine("\nSymbol requierd");
+                return;
             }
 
-            if (!password.Any(char.IsSymbol))
+            else if(password.Any(char.IsUpper) == false)
             {
-                Console.WriteLine("\nAtleast one symbol");
-                CreateNewUser();
+                Console.WriteLine("\nBig letter requierd");
+                return;
             }
-
-         
+            else
+            {
+                Console.WriteLine("\n\n\nYAY! ACCOUNT CREATED, YOU CAN NOW SIGN IN!");
+            }
 
             var user = new CreateUser()
             {
@@ -103,8 +115,6 @@ namespace PasswordStuff
             CreateUserFile.UpDate(json);
 
             return;
-
-
 
         }
 
@@ -273,19 +283,15 @@ namespace PasswordStuff
 
             foreach (var user in json)
             {
-                Console.WriteLine("[" + whichIndex + "]\n");
-                Console.WriteLine("NAME");
-                Console.WriteLine(user.FirstName + " " + user.LastName + "\n");
-                Console.WriteLine("EMAIL");
-                Console.WriteLine(user.Email + "\n");
-                Console.WriteLine("USERNAME");
-                Console.WriteLine(user.UserName + "\n");
-                Console.WriteLine("PASSWORD");
-                Console.WriteLine(user.Password + "\n");
-                Console.WriteLine("ACCESSLEVEL");
-                Console.WriteLine("ADMIN : " + user.AccessLevelAdm);
-                Console.WriteLine("MODERATOR : " + user.AccessLevelMod);
-                Console.WriteLine("USER: " + user.AccessLevelOne + "\n\n\n");
+                Console.WriteLine("\n\n\n[" + whichIndex + "]\n\n" +
+                    "NAME\n" + user.FirstName + " " + user.LastName + "\n" +
+                    "EMAIL\n" + user.Email + "\n\n" +
+                    "USERNAME\n" + user.UserName + "\n\n" +
+                    "PASSWORD\n" + user.Password + "\n\n" +
+                    " -- ACCESSLEVEL -- \n\n" + "USER\n" + user.AccessLevelOne + "\n" +
+                    "\nMODERATOR\n" + user.AccessLevelMod + "\n" +
+                    "\nADMIN\n" + user.AccessLevelAdm + "\n"
+                    );
                 whichIndex++;
             }
 
@@ -487,6 +493,27 @@ namespace PasswordStuff
             }
 
             return true;
+        }
+
+
+        public static string ReadPassword()
+        {
+            string password = "";
+            ConsoleKeyInfo info = Console.ReadKey(true);
+            while (info.Key != ConsoleKey.Enter)
+            {
+                if (info.Key != ConsoleKey.Backspace)
+                {
+                    Console.Write("*");
+                    password += info.KeyChar;
+
+                }
+
+                info = Console.ReadKey(true);
+            }
+
+            Console.WriteLine();
+            return password;
         }
 
 

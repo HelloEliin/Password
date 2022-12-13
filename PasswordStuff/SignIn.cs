@@ -13,8 +13,19 @@ namespace PasswordStuff
 
                 Console.WriteLine("\n\nUSERNAME:");
                 var username = Console.ReadLine();
+                if(string.IsNullOrEmpty(username))
+                {
+                    return -1;
+                    
+                }
+
                 Console.WriteLine("\n\nPASSWORD:");
-                var password = Console.ReadLine();
+                var password = CreateUser.ReadPassword();
+                if (string.IsNullOrEmpty(password))
+                {
+                    return -1;
+                }
+
 
                 for (int i = 0; i < json.Count; i++)
                 {
