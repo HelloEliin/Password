@@ -458,7 +458,7 @@ namespace PasswordStuff
             var json = CreateUserFile.GetJson();
             if (user > json.Count || user < 0)
             {
-                Console.WriteLine("\n\nThat user dont exists");
+                Console.WriteLine("\n\nThat user don't exists");
                 return false;
             }
             return true;
@@ -502,6 +502,7 @@ namespace PasswordStuff
             ConsoleKeyInfo info = Console.ReadKey(true);
             while (info.Key != ConsoleKey.Enter)
             {
+            
                 if (info.Key != ConsoleKey.Backspace)
                 {
                     Console.Write("*");
@@ -520,11 +521,13 @@ namespace PasswordStuff
                         Console.SetCursorPosition(pos - 1, Console.CursorTop);
                     }
                 }
+
                 info = Console.ReadKey(true);
 
             }
-          
+
             Console.WriteLine();
+
             return password;
         }
 

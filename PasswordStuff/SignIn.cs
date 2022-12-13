@@ -9,17 +9,28 @@ namespace PasswordStuff
             {
                 var json = CreateUserFile.GetJson();
 
-                Console.WriteLine("\n\nUSERNAME:");
+                Console.WriteLine("\n\nUSERNAME OR TYPE '10' TO QUIT");
                 var username = Console.ReadLine();
+
+               if(username == "10" || username == "10")
+               {
+                return -10;
+                }
+
                 if(string.IsNullOrEmpty(username))
                 {
                     return -1;
                     
                 }
 
-                Console.WriteLine("\n\nPASSWORD:");
+                Console.WriteLine("\n\nPASSWORD OR TYPE '10' TO QUIT");
                 var password = CreateUser.ReadPassword();
-                if (string.IsNullOrEmpty(password))
+
+            if (password == "10")
+            {
+                return -10;
+            }
+            if (string.IsNullOrEmpty(password))
                 {
                     return -1;
                 }

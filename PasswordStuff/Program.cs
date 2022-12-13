@@ -25,8 +25,12 @@ namespace PasswordStuff
                             Console.WriteLine("\n\nWrong username or password.");
                             
                         }
-                        else
+                        else if(userIndex == -10)
                         {
+                            break;
+                        }
+
+                        else {
                             Menus.UserSystemMenu(userIndex);
                         }
                         

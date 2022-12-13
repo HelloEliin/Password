@@ -1,1 +1,12 @@
-[{"FirstName":"Elin","LastName":"Holm","UserName":"admin","Email":"elin.ronnback@gmail.com","Password":"admin","AccessLevelOne":false,"AccessLevelMod":false,"AccessLevelAdm":true},{"FirstName":"Kool","LastName":"Kool","UserName":"Kerstin","Email":"ewgweogkwe@ga.","Password":"kkkkkkKK\u002B\u002B","AccessLevelOne":true,"AccessLevelMod":false,"AccessLevelAdm":false},{"FirstName":"efe","LastName":"ege","UserName":"apansson","Email":"wegwe@.","Password":"apanssonOOO\u002B\u002B\u002B","AccessLevelOne":true,"AccessLevelMod":false,"AccessLevelAdm":false}]
+[
+  {
+    "FirstName": "Elin",
+    "LastName": "Holm",
+    "UserName": "admin",
+    "Email": "elin.ronnback@gmail.com",
+    "Password": "admin",
+    "AccessLevelOne": false,
+    "AccessLevelMod": false,
+    "AccessLevelAdm": true
+  }
+]
