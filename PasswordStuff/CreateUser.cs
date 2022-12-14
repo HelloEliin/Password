@@ -30,68 +30,140 @@ namespace PasswordStuff
 
             Console.WriteLine("\nENTER USERNAME (OR PRESS 'Q' TO QUIT)");
             var userName = Console.ReadLine();
-
-            if(userName == "q" || userName == "Q")
+            if (userName == "q" || userName == "Q")
             {
                 return;
             }
+
+            if (String.IsNullOrEmpty(userName))
+            {
+                do
+                {
+                    Console.WriteLine("You have to choose username. Enter a username");
+                    userName = Console.ReadLine();
+                    if (userName == "q" || userName == "Q")
+                    {
+                        return;
+                    }
+                } while (userName == "");
+            }
+
 
             bool usernameAvalible = IsUserNameAvalible(userName);
-            if (!usernameAvalible)
+
+            while (!usernameAvalible)
             {
-                Console.WriteLine("\nSomeone else already uses this username");
-                return;
+                Console.WriteLine("\nSomeone else already uses this username. Enter another.");
+                userName = Console.ReadLine();
+                if (userName == "q" || userName == "Q")
+                {
+                    return;
+                }
+
+                if (string.IsNullOrEmpty(userName))
+                {
+                    Console.WriteLine("You have to choose username");
+
+                }
+                usernameAvalible = IsUserNameAvalible(userName);
+
             }
 
-            if (string.IsNullOrEmpty(userName))
-            {
-                Console.WriteLine("You have to choose username");
-                return;
-            }
-
-            Console.WriteLine("\nENTER YOUR FIRSTNAME");
+            Console.WriteLine("ENTER FIRST NAME");
             var firstName = Console.ReadLine();
+
             if (firstName == "q" || firstName == "Q")
             {
                 return;
             }
-            if (string.IsNullOrEmpty(firstName))
+
+            if (String.IsNullOrEmpty(firstName))
             {
-                Console.WriteLine("\n\nYou have to enter a firstname");
-                return;
+                do
+                {
+                    Console.WriteLine("You have to enter first name");
+                    firstName = Console.ReadLine();
+                    if (firstName == "q" || firstName == "Q")
+                    {
+                        return;
+                    }
+                } while (firstName == "");
+
             }
+
+
+
+
             Console.WriteLine("\nENTER YOUR LASTNAME");
             var lastName = Console.ReadLine();
             if (lastName == "q" || lastName == "Q")
             {
                 return;
             }
-            if (string.IsNullOrEmpty(lastName))
+
+            if (String.IsNullOrEmpty(lastName))
             {
-                Console.WriteLine("\nYou have to enter lastname");
-                return;
+                do
+                {
+                    Console.WriteLine("You have to enter lastname");
+                    lastName = Console.ReadLine();
+                    if (lastName == "q" || lastName == "Q")
+                    {
+                        return;
+                    }
+                } while (lastName == "");
+
             }
+
+
+
             Console.WriteLine("\nENTER YOUR EMAIL");
             var email = Console.ReadLine();
+
 
             if (email == "q" || email == "Q")
             {
                 return;
             }
 
-            bool emailUsed = IfMailAlreadyExists(email);
+            if (String.IsNullOrEmpty(email))
+            {
+                do
+                {
+                    Console.WriteLine("You have to enter an email.");
+                    email = Console.ReadLine();
+                    if (email == "q" || email == "Q")
+                    {
+                        return;
+                    }
 
+                } while (email == "");
+
+            }
+
+            if (!email.Contains("@") || !email.Contains("."))
+            {
+                do
+                {
+                    Console.WriteLine("That doesn't look like an email. Try again.");
+                    email = Console.ReadLine();
+                    if (email == "q" || email == "Q")
+                    {
+                        return;
+                    }
+                } while (!email.Contains("@") || !email.Contains("."));
+
+            }
+
+            bool emailUsed = IfMailAlreadyExists(email);
             if (emailUsed)
             {
-                Console.WriteLine("\nThere is already a account with this email");
+
+                Console.WriteLine("\nThere is already a account with this email. Have you forgotten your password? Contact support, else try another email.");
                 return;
+
             }
 
-            if (!email.Contains("@") || !email.Contains(".") || string.IsNullOrEmpty(email))
-            {
-                Console.WriteLine("\nInvalid emailadress");
-                return;
-            }
 
 
             Console.WriteLine("\nENTER A PASSWORD. (MIN 8 LETTERS, 1 BIG LETTER AND ONE SYMBOL)");
@@ -100,25 +172,45 @@ namespace PasswordStuff
 
             if (password.Length < 8)
             {
-                Console.WriteLine("\nToo short");
-                return;
-            }
-     
-            else if (password.Any(char.IsSymbol) == false && password.Any(char.IsUpper) == false)
-            {
-                Console.WriteLine("Symbol and big letter requierd");
-                return;
-            }
-            else if (password.Any(char.IsSymbol) == false)
-            {
-                Console.WriteLine("\nSymbol requierd");
-                return;
+                do
+                {
+                    Console.WriteLine("\nToo short");
+                    password = ReadPassword();
+
+                } while(password.Length < 8);
+           
             }
 
-            else if(password.Any(char.IsUpper) == false)
+            if (password.Any(char.IsSymbol) == false && password.Any(char.IsUpper) == false)
             {
-                Console.WriteLine("\nBig letter requierd");
-                return;
+                do
+                {
+                    Console.WriteLine("Symbol and big letter requierd");
+                    password = ReadPassword();
+                } while (password.Any(char.IsSymbol) == false && password.Any(char.IsUpper) == false);
+            }
+
+
+
+            if (password.Any(char.IsSymbol) == false)
+            {
+                do
+                {
+                    Console.WriteLine("\nSymbol requierd");
+                    password = ReadPassword();
+
+                } while (password.Any(char.IsSymbol) == false);
+       
+            }
+
+            if (password.Any(char.IsUpper) == false)
+            {
+                do
+                {
+                    Console.WriteLine("\nBig letter requierd");
+                    password = ReadPassword();
+                } while (password.Any(char.IsUpper) == false);
+
             }
             else
             {
@@ -456,9 +548,11 @@ namespace PasswordStuff
             json[num].LastName = newLastName;
 
             CreateUserFile.UpDate(json);
-
-
         }
+
+
+        
+    
 
 
         public static void ChangeEmail()
@@ -603,7 +697,7 @@ namespace PasswordStuff
             }
 
         }
-
+         
 
         public static void SearchUser()
         {
@@ -630,12 +724,98 @@ namespace PasswordStuff
                 Console.WriteLine("NO MATCHES FOUND");
                 Console.ForegroundColor = ConsoleColor.White;
             }
-            
 
+        }
+
+        public static bool IsValidEmail()
+        {
+
+            Console.WriteLine("\nENTER YOUR EMAIL");
+            var email = Console.ReadLine();
+
+
+            if (email == "q" || email == "Q")
+            {
+                return false;
+            }
+
+            if (String.IsNullOrEmpty(email))
+            {
+                do
+                {
+                    Console.WriteLine("You have to enter an email.");
+                    email = Console.ReadLine();
+                    if (email == "q" || email == "Q")
+                    {
+                        return false;
+                    }
+
+                } while (email == "");
+
+            }
+
+            if (!email.Contains("@") || !email.Contains("."))
+            {
+
+                Console.WriteLine("That doesn't look like an email. Try again.");
+                return false;
+
+            }
+
+            bool emailUsed = IfMailAlreadyExists(email);
+            if (emailUsed)
+            {
+
+                Console.WriteLine("\nThere is already a account with this email. Have you forgotten your password? Contact support, else try another email.");
+                return false;
+
+            }
+
+            return true;
 
         }
 
 
+
+
+        public static bool ValidPassword(string password)
+        {
+           
+
+            if (password.Length < 8)
+            {
+                Console.WriteLine("\nToo short");
+                return false;
+                
+            }
+
+            else if (password.Any(char.IsSymbol) == false && password.Any(char.IsUpper) == false)
+            {
+                Console.WriteLine("Symbol and big letter requierd");
+                return false;
+
+            }
+            else if (password.Any(char.IsSymbol) == false)
+            {
+                Console.WriteLine("\nSymbol requierd");
+                return false;
+
+            }
+
+            else if (password.Any(char.IsUpper) == false)
+            {
+                Console.WriteLine("\nBig letter requierd");
+                return false;
+
+            }
+
+            else
+            {
+                Console.WriteLine("\n\n\nYAY! ACCOUNT CREATED, YOU CAN NOW SIGN IN!");
+                return true;
+            }
+
+        }
 
 
 
