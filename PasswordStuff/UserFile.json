@@ -1,32 +1,12 @@
 [
   {
-    "FirstName": "Elin",
+    "FirstName": "Sandra",
     "LastName": "Holm",
-    "UserName": "admin",
-    "Email": "elin.ronnback@gmail.com",
-    "Password": "admin",
+    "UserName": "q",
+    "Email": "elnl.@",
+    "Password": "q",
     "AccessLevelOne": false,
     "AccessLevelMod": false,
     "AccessLevelAdm": true
-  },
-  {
-    "FirstName": "anna\u00A8",
-    "LastName": "ki",
-    "UserName": "AnnaKI",
-    "Email": "egieww.@",
-    "Password": "aaaaaaA\u002B",
-    "AccessLevelOne": false,
-    "AccessLevelMod": true,
-    "AccessLevelAdm": false
-  },
-  {
-    "FirstName": "sofie",
-    "LastName": "sa",
-    "UserName": "Sofie",
-    "Email": "eogiwe.@",
-    "Password": "aaaaaaA\u002B",
-    "AccessLevelOne": true,
-    "AccessLevelMod": false,
-    "AccessLevelAdm": false
   }
 ]
