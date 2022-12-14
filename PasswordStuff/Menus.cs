@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Runtime.CompilerServices;
 using System.Text.Json.Nodes;
 
 namespace PasswordStuff
@@ -16,21 +17,12 @@ namespace PasswordStuff
 
         }
 
-        public static void MenuForRegularUser()
+        public static void MenuForUserAndMod()
         {
             Console.WriteLine("\n\n[1] MY USERINFO\n" +
                 "[10] SIGN OUT");
         }
 
-
-        public static void MenuForMod()
-        {
-            Console.WriteLine("\n\n[1] MY USERINFO\n" +
-                "[2] PROMOTE USER\n" +
-                "[3] DEMOTE USER\n" +
-                "[10] SIGN OUT"
-                );
-        }
 
         public static void MenuForAdmin()
         {
@@ -120,17 +112,10 @@ namespace PasswordStuff
         {
             var json = CreateUserFile.GetJson();
 
-            if (json[userIndex].AccessLevelOne == true)
+            if (json[userIndex].AccessLevelOne == true || json[userIndex].AccessLevelMod == true)
             {
-                Menus.MenuForRegularUser();
+                Menus.MenuForUserAndMod();
             }
-
-
-            if (json[userIndex].AccessLevelMod == true)
-            {
-                Menus.MenuForMod();
-            }
-
 
             if (json[userIndex].AccessLevelAdm == true)
             {
@@ -149,9 +134,9 @@ namespace PasswordStuff
                     CreateUser.ShowMyUserInfo(userIndex);
                     break;
                 case "2":  
-                    if (json[userIndex].AccessLevelMod == true)
+                    if (json[userIndex].AccessLevelMod == true || json[userIndex].AccessLevelOne == true)
                     {
-                        CreateUser.PromoteUser();
+                        Console.WriteLine("Try again");
                         Menus.UserSystemMenu(userIndex);
                     }
 
@@ -160,27 +145,17 @@ namespace PasswordStuff
                        CreateUser.ShowAllUsers();
                         Menus.UserSystemMenu(userIndex);
                     }
-                    if (json[userIndex].AccessLevelOne == true)
-                    {
-                        Console.WriteLine("Select a choice");
-                        Menus.UserSystemMenu(userIndex);
-                    }
                     break;
 
                 case "3":
-                    if (json[userIndex].AccessLevelMod == true)
-                    {
-                        CreateUser.DemoteUser();
-                        Menus.UserSystemMenu(userIndex);
-                    }
                     if(json[userIndex].AccessLevelAdm == true)
                     {
                         Menus.AdmSubMenu();
                         Menus.UserSystemMenu(userIndex);
                     }
-                    if (json[userIndex].AccessLevelOne == true)
+                    if (json[userIndex].AccessLevelOne == true || json[userIndex].AccessLevelMod == true)
                     {
-                        Console.WriteLine("Select a choice");
+                        Console.WriteLine("Try again");
                         Menus.UserSystemMenu(userIndex);
                     }
 
@@ -192,15 +167,24 @@ namespace PasswordStuff
                         Menus.UserSystemMenu(userIndex);
                     }
 
-                    if (json[userIndex].AccessLevelAdm == true || json[userIndex].AccessLevelMod == true)
+                    if (json[userIndex].AccessLevelOne == true || json[userIndex].AccessLevelMod == true)
                     {
-                        Console.WriteLine("Select a choice");
+                        Console.WriteLine("Try again");
                         Menus.UserSystemMenu(userIndex);
                     }
 
                     break;
-                case "5": CreateUser.ShowAllMods();
-                    Menus.UserSystemMenu(userIndex);
+                case "5": if(json[userIndex].AccessLevelAdm == true)
+                    {
+
+                        CreateUser.ShowAllMods();
+                        Menus.UserSystemMenu(userIndex);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Try again");
+                        Menus.UserSystemMenu(userIndex);
+                    }
                     break;
                 case "10":
                     break;
