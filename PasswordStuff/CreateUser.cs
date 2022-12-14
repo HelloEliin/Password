@@ -890,47 +890,21 @@ namespace PasswordStuff
             Console.WriteLine("ENTER NEW EMAIL");
             var newEmail = Console.ReadLine();
 
-            if (newEmail == "q" || newEmail == "Q")
-            {
-                return;
-            }
-
-
-            do
-            {
-
-                if (String.IsNullOrEmpty(newEmail))
-                {
-                    Console.WriteLine("You have to enter new email");
-                    newEmail = Console.ReadLine();
-                    if (newEmail == "q" || newEmail == "Q")
-                    {
-                        return;
-                    }
-                }
-            } while (string.IsNullOrEmpty(newEmail));
-
-            if (!newEmail.Contains("@") || !newEmail.Contains("."))
+            string truey = IsValidEmail(newEmail);
+            if (truey == "-1")
             {
                 do
                 {
-                    Console.WriteLine("That doesn't look like an email. Try again.");
+                    Console.WriteLine("ENTER NEW EMAIL");
                     newEmail = Console.ReadLine();
-                    if (newEmail == "q" || newEmail == "Q")
-                    {
-                        return;
-                    }
-                } while (!newEmail.Contains("@") || !newEmail.Contains("."));
+                    truey = IsValidEmail(newEmail);
 
+                } while (truey == "-1");
             }
 
-            bool emailUsed = IfMailAlreadyExists(newEmail);
-            if (emailUsed)
+            if(truey == "-2")
             {
-
-                Console.WriteLine("\nThere is already an account with this email.");
                 return;
-
             }
 
 
@@ -1081,38 +1055,34 @@ namespace PasswordStuff
 
         }
 
-        public static bool IsValidEmail()
+        public static string IsValidEmail(string email)
         {
 
-            Console.WriteLine("\nENTER YOUR EMAIL");
-            var email = Console.ReadLine();
-
-
-            if (email == "q" || email == "Q")
+            do
             {
-                return false;
-            }
 
-            if (String.IsNullOrEmpty(email))
-            {
-                do
+                if (String.IsNullOrEmpty(email))
                 {
-                    Console.WriteLine("You have to enter an email.");
+                    Console.WriteLine("You have to enter new email");
                     email = Console.ReadLine();
                     if (email == "q" || email == "Q")
                     {
-                        return false;
+                        return "-2";
                     }
-
-                } while (email == "");
-
-            }
+                }
+            } while (string.IsNullOrEmpty(email));
 
             if (!email.Contains("@") || !email.Contains("."))
             {
-
-                Console.WriteLine("That doesn't look like an email. Try again.");
-                return false;
+                do
+                {
+                    Console.WriteLine("That doesn't look like an email. Try again.");
+                    email = Console.ReadLine();
+                    if (email == "q" || email == "Q")
+                    {
+                        return "-2";
+                    }
+                } while (!email.Contains("@") || !email.Contains("."));
 
             }
 
@@ -1120,14 +1090,20 @@ namespace PasswordStuff
             if (emailUsed)
             {
 
-                Console.WriteLine("\nThere is already a account with this email. Have you forgotten your password? Contact support, else try another email.");
-                return false;
+                Console.WriteLine("\nThere is already an account with this email.");
+                return "-1";
 
             }
 
-            return true;
+            return email;
 
         }
+
+
+
+
+
+
 
 
 

@@ -1,12 +1,1 @@
-[
-  {
-    "FirstName": "Sandra",
-    "LastName": "Holm",
-    "UserName": "q",
-    "Email": "elnl.@",
-    "Password": "q",
-    "AccessLevelOne": false,
-    "AccessLevelMod": false,
-    "AccessLevelAdm": true
-  }
-]
+[{"FirstName":"Sandra","LastName":"Holm","UserName":"q","Email":"","Password":"q","AccessLevelOne":false,"AccessLevelMod":false,"AccessLevelAdm":true}]
