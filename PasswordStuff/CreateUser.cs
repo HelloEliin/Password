@@ -276,23 +276,80 @@ namespace PasswordStuff
             }
             int num = 0;
 
-
             bool valid = int.TryParse(choice, out num);
+
             if (!valid)
             {
-                Console.WriteLine("You have to choose a number.");
-                return;
+                do
+                {
+                    if (!valid)
+                    {
+                        Console.WriteLine("You have to choose a number.");
+                        choice = Console.ReadLine();
+                        if(choice == "q" || choice == "Q")
+                        {
+                            return;
+                        }
+                        valid = int.TryParse(choice, out num);
+
+                    }
+                } while (!valid);
             }
+
+            if(num > json.Count || num < -1)
+            {
+                do
+                {
+                    Console.WriteLine("That user don't exists.");
+                    choice = Console.ReadLine();
+                    if (choice == "q" || choice == "Q")
+                    {
+                        return;
+                    }
+                    valid = int.TryParse(choice, out num);
+
+                } while (num > json.Count || num < -1);
+            }
+
 
             Console.WriteLine("SELECT NEW ACCESSLEVEL\n");
             Console.WriteLine(
                 "[1] ACCESSLEVEL MODERATOR\n" +
                 "[2] ACCESSLEVEL ADMIN\n\n");
 
+            int number = 0;
             var whatAccess = Console.ReadLine();
+            if (whatAccess == "q" || whatAccess == "Q")
+            {
+                return;
+            }
+
+            bool validNumber = int.TryParse(whatAccess, out number);
+
+            if (!validNumber || whatAccess == "")
+            {
+                do
+                {
+                    Console.WriteLine("That level don't exists. Try again.");
+                    whatAccess = Console.ReadLine();
+                    if (whatAccess == "2" || whatAccess == "1")
+                    {
+                        break;
+                    }
+                    if(whatAccess == "q" || whatAccess == "Q")
+                    {
+                        return;
+                    }
+
+                } while (whatAccess != "2" || whatAccess != "1");
+            }
+
+
+
 
             if (whatAccess == "1")
             {
+
                 json[num].AccessLevelMod = true;
                 json[num].AccessLevelAdm = false;
                 json[num].AccessLevelOne = false;
@@ -301,23 +358,27 @@ namespace PasswordStuff
 
             if (whatAccess == "2")
             {
-                json[num].AccessLevelAdm = false;
+                json[num].AccessLevelMod = false;
                 json[num].AccessLevelAdm = true;
                 json[num].AccessLevelOne = false;
+
             }
 
             Console.WriteLine("\n\nUSER IS PROMOTED");
-
             CreateUserFile.UpDate(json);
+
+
         }
 
+    
 
 
-        public static void DemoteUser()
+
+    public static void DemoteUser()
         {
             var json = CreateUserFile.GetJson();
             ShowAllUsers();
-            Console.WriteLine("SELECT USER ABOVE (OR PRESS 'Q' TO QUIT)");
+            Console.WriteLine("SELECT USER ABOVE (OR PRESS 'Q TO QUIT)");
             var choice = Console.ReadLine();
 
             if (choice == "q" || choice == "Q")
@@ -326,39 +387,96 @@ namespace PasswordStuff
             }
             int num = 0;
 
-
             bool valid = int.TryParse(choice, out num);
+
             if (!valid)
             {
-                Console.WriteLine("You have to choose a number.");
-                return;
+                do
+                {
+                    if (!valid)
+                    {
+                        Console.WriteLine("You have to choose a number.");
+                        choice = Console.ReadLine();
+                        if (choice == "q" || choice == "Q")
+                        {
+                            return;
+                        }
+                        valid = int.TryParse(choice, out num);
+
+                    }
+                } while (!valid);
             }
+
+            if (num > json.Count || num < -1)
+            {
+                do
+                {
+                    Console.WriteLine("That user don't exists.");
+                    choice = Console.ReadLine();
+                    if (choice == "q" || choice == "Q")
+                    {
+                        return;
+                    }
+                    valid = int.TryParse(choice, out num);
+
+                } while (num > json.Count || num < -1);
+            }
+
 
             Console.WriteLine("SELECT NEW ACCESSLEVEL\n");
             Console.WriteLine(
-                "\n[1] ACCESSLEVEL ONE\n" +
-                "\n[2] ACCESSLEVEL MODERATOR\n");
+                "[1] ACCESSLEVEL ONE\n" +
+                "[2] ACCESSLEVEL MODERATOR\n");
 
+            int number = 0;
             var whatAccess = Console.ReadLine();
+            if (whatAccess == "q" || whatAccess == "Q")
+            {
+                return;
+            }
+
+
+            bool validNumber = int.TryParse(whatAccess, out number);
+
+            if (!validNumber || whatAccess == "")
+            {
+                do
+                {
+                    Console.WriteLine("That level don't exists. Try again.");
+                    whatAccess = Console.ReadLine();
+                    if (whatAccess == "2" || whatAccess == "1")
+                    {
+                        break;
+                    }
+                    if (whatAccess == "q" || whatAccess == "Q")
+                    {
+                        return;
+                    }
+
+                } while (whatAccess != "2" || whatAccess != "1");
+            }
 
             if (whatAccess == "1")
             {
-                json[num].AccessLevelMod = false;
-                json[num].AccessLevelAdm = false;
+
                 json[num].AccessLevelOne = true;
+                json[num].AccessLevelAdm = false;
+                json[num].AccessLevelMod = false;
 
             }
 
             if (whatAccess == "2")
             {
                 json[num].AccessLevelAdm = false;
-                json[num].AccessLevelAdm = false;
+                json[num].AccessLevelMod = true;
                 json[num].AccessLevelOne = false;
+
             }
 
             Console.WriteLine("\n\nUSER IS DEMOTED");
-
             CreateUserFile.UpDate(json);
+
+
         }
 
 
