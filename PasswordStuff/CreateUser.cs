@@ -159,7 +159,7 @@ namespace PasswordStuff
             if (emailUsed)
             {
 
-                Console.WriteLine("\nThere is already a account with this email. Have you forgotten your password? Contact support, else try another email.");
+                Console.WriteLine("\nThere is already an account with this email. Have you forgotten your password? Contact support.");
                 return;
 
             }
