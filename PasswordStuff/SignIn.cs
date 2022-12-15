@@ -17,7 +17,7 @@ namespace PasswordStuff
                 return -10;
                 }
 
-                if(string.IsNullOrEmpty(username))
+                if(string.IsNullOrWhiteSpace(username))
                 {
                     return -1;
 
@@ -30,7 +30,7 @@ namespace PasswordStuff
             {
                 return -10;
             }
-            if (string.IsNullOrEmpty(password))
+            if (string.IsNullOrWhiteSpace(password))
             {
                 return -1;
             }

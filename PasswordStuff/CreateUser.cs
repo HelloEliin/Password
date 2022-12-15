@@ -36,7 +36,7 @@ namespace PasswordStuff
                 return;
             }
 
-            if (String.IsNullOrEmpty(userName))
+            if (String.IsNullOrWhiteSpace(userName))
             {
                 do
                 {
@@ -61,7 +61,7 @@ namespace PasswordStuff
                     return;
                 }
 
-                if (string.IsNullOrEmpty(userName))
+                if (string.IsNullOrWhiteSpace(userName))
                 {
                     Console.WriteLine("You have to choose username");
 
@@ -103,7 +103,7 @@ namespace PasswordStuff
                 return;
             }
 
-            if (String.IsNullOrEmpty(lastName))
+            if (String.IsNullOrWhiteSpace(lastName))
             {
                 do
                 {
@@ -228,7 +228,7 @@ namespace PasswordStuff
                 return;
             }
 
-            Console.WriteLine("SELECT NEW ACCESSLEVEL\n");
+            Console.WriteLine("\n\nSELECT NEW ACCESSLEVEL\n");
             Console.WriteLine(
                 "[1] ACCESSLEVEL MODERATOR\n" +
                 "[2] ACCESSLEVEL ADMIN\n\n");
@@ -296,7 +296,7 @@ namespace PasswordStuff
                 return;
             }
 
-            Console.WriteLine("SELECT NEW ACCESSLEVEL\n");
+            Console.WriteLine("\n\nSELECT NEW ACCESSLEVEL\n");
             Console.WriteLine(
                 "[1] ACCESSLEVEL ONE\n" +
                 "[2] ACCESSLEVEL MODERATOR\n");
@@ -413,7 +413,7 @@ namespace PasswordStuff
                 return;
             }
 
-            Console.WriteLine("ENTER NEW USERNAME");
+            Console.WriteLine("\nENTER NEW USERNAME");
             var newUserName = Console.ReadLine();
             if(newUserName == "q" || newUserName == "Q")
             {
@@ -423,7 +423,7 @@ namespace PasswordStuff
             do
             {
 
-                if (String.IsNullOrEmpty(newUserName))
+                if (String.IsNullOrWhiteSpace(newUserName))
                 {
                     Console.WriteLine("You have to enter new username");
                     newUserName = Console.ReadLine();
@@ -435,7 +435,7 @@ namespace PasswordStuff
             } while (string.IsNullOrEmpty(newUserName));
 
 
-            Console.WriteLine("USERNAME CHANGED");
+            Console.WriteLine("\n\nUSERNAME CHANGED");
 
 
             json[user].UserName = newUserName;
@@ -593,24 +593,26 @@ namespace PasswordStuff
             {
                 if (json[i].AccessLevelMod == true)
                 {
-                    Console.WriteLine("\n\nIS MOD\n(USERNAME)\n\n" + json[i].UserName);
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("\n\nUSERNAME: " + "'" + json[i].UserName + "'");
                 }
 
             }
-
+            Console.ForegroundColor = ConsoleColor.White;
             var isThereAnyMods = json.All(x => x.AccessLevelMod == false);
             if (isThereAnyMods)
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("\n\nNO MODS IN THIS SYSTEM");
             }
-
+            Console.ForegroundColor = ConsoleColor.White;
         }
          
 
         public static void SearchUser()
         {
             var json = CreateUserFile.GetJson();
-            Console.WriteLine("ENTER USERNAME TO SEARCH FOR (OR PRESS 'Q' TO QUIT\n");
+            Console.WriteLine("\n\nENTER USERNAME TO SEARCH FOR (OR PRESS 'Q' TO QUIT\n");
             var userToSearch = Console.ReadLine();
             if(userToSearch == "q" || userToSearch == "Q")
             {
@@ -641,7 +643,7 @@ namespace PasswordStuff
 
         public static string IsValidEmail(string email)
         {
-            if (String.IsNullOrEmpty(email))
+            if (String.IsNullOrWhiteSpace(email))
             {
                 do
                 {
@@ -795,7 +797,7 @@ namespace PasswordStuff
             do
             {
 
-                if (String.IsNullOrEmpty(newFirstName))
+                if (String.IsNullOrWhiteSpace(newFirstName))
                 {
                     Console.WriteLine("You have to enter new firstname");
                     newFirstName = Console.ReadLine();
@@ -819,7 +821,7 @@ namespace PasswordStuff
             do
             {
 
-                if (String.IsNullOrEmpty(newLastName))
+                if (String.IsNullOrWhiteSpace(newLastName))
                 {
                     Console.WriteLine("You have to enter new lastname");
                     newLastName = Console.ReadLine();
@@ -904,15 +906,13 @@ namespace PasswordStuff
             {
                 return;
             }
-            bool isValid = ValidPassword(newPassword);
-
 
             bool validOrNot = ValidPassword(newPassword);
             if (!validOrNot)
             {
                 do
                 {
-                    Console.WriteLine("\nENTER NEW PASSWORD");
+                    Console.WriteLine("\nENTER PASSWORD");
                     newPassword = ReadPassword();
                     validOrNot = ValidPassword(newPassword);
                     if (newPassword == "q" || newPassword == "Q")
