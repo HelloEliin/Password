@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.ComponentModel.DataAnnotations;
+using System.Reflection.Metadata.Ecma335;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.Json.Nodes;
@@ -39,7 +40,7 @@ namespace PasswordStuff
             {
                 do
                 {
-                    Console.WriteLine("You have to choose username. Enter a username");
+                    Console.WriteLine("You have to choose username");
                     userName = Console.ReadLine();
                     if (userName == "q" || userName == "Q")
                     {
@@ -53,7 +54,7 @@ namespace PasswordStuff
 
             while (!usernameAvalible)
             {
-                Console.WriteLine("\nSomeone else already uses this username. Enter another.");
+                Console.WriteLine("\nSomeone else already uses this username");
                 userName = Console.ReadLine();
                 if (userName == "q" || userName == "Q")
                 {
@@ -68,6 +69,7 @@ namespace PasswordStuff
                 usernameAvalible = IsUserNameAvalible(userName);
 
             }
+
 
             Console.WriteLine("ENTER FIRST NAME");
             var firstName = Console.ReadLine();
@@ -120,102 +122,54 @@ namespace PasswordStuff
             Console.WriteLine("\nENTER YOUR EMAIL");
             var email = Console.ReadLine();
 
+            string theEmail = IsValidEmail(email);
 
-            if (email == "q" || email == "Q")
+            if (theEmail == "-1")
+            {
+                do
+                {
+                    Console.WriteLine("ENTER NEW EMAIL");
+                    email = Console.ReadLine();
+                    theEmail = IsValidEmail(email);
+
+                } while (theEmail == "-1");
+            }
+
+            if (theEmail == "-2")
             {
                 return;
             }
 
-            if (String.IsNullOrEmpty(email))
-            {
-                do
-                {
-                    Console.WriteLine("You have to enter an email.");
-                    email = Console.ReadLine();
-                    if (email == "q" || email == "Q")
-                    {
-                        return;
-                    }
-
-                } while (email == "");
-
-            }
-
-            if (!email.Contains("@") || !email.Contains("."))
-            {
-                do
-                {
-                    Console.WriteLine("That doesn't look like an email. Try again.");
-                    email = Console.ReadLine();
-                    if (email == "q" || email == "Q")
-                    {
-                        return;
-                    }
-                } while (!email.Contains("@") || !email.Contains("."));
-
-            }
-
-            bool emailUsed = IfMailAlreadyExists(email);
-            if (emailUsed)
-            {
-
-                Console.WriteLine("\nThere is already an account with this email. Have you forgotten your password? Contact support.");
-                return;
-
-            }
+            email = theEmail;
 
 
 
             Console.WriteLine("\nENTER A PASSWORD. (MIN 8 LETTERS, 1 BIG LETTER AND ONE SYMBOL)");
             var password = ReadPassword();
 
-
-            if (password.Length < 8)
+            if (password == "q" || password == "Q")
+            {
+                return;
+            }
+            bool validOrNot = ValidPassword(password);
+            if (!validOrNot)
             {
                 do
                 {
-                    Console.WriteLine("\nToo short");
+                    Console.WriteLine("\nENTER NEW PASSWORD");
                     password = ReadPassword();
+                    validOrNot = ValidPassword(password);
+                    if (password == "q" || password == "Q")
+                    {
+                        return;
+                    }
 
-                } while(password.Length < 8);
-           
-            }
-
-            if (password.Any(char.IsSymbol) == false && password.Any(char.IsUpper) == false)
-            {
-                do
-                {
-                    Console.WriteLine("Symbol and big letter requierd");
-                    password = ReadPassword();
-                } while (password.Any(char.IsSymbol) == false && password.Any(char.IsUpper) == false);
+                } while (!validOrNot);
             }
 
 
-
-            if (password.Any(char.IsSymbol) == false)
-            {
-                do
-                {
-                    Console.WriteLine("\nSymbol requierd");
-                    password = ReadPassword();
-
-                } while (password.Any(char.IsSymbol) == false);
-       
-            }
-
-            if (password.Any(char.IsUpper) == false)
-            {
-                do
-                {
-                    Console.WriteLine("\nBig letter requierd");
-                    password = ReadPassword();
-                } while (password.Any(char.IsUpper) == false);
-
-            }
-            else
-            {
-                Console.WriteLine("\n\n\nYAY! ACCOUNT CREATED, YOU CAN NOW SIGN IN!");
-            }
+            Console.WriteLine("\n\n\nYAY! ACCOUNT CREATED, YOU CAN NOW SIGN IN!");
+    
 
             var user = new CreateUser()
             {
@@ -258,6 +212,7 @@ namespace PasswordStuff
                 Menus.UserSystemMenu(user);
                 return;
             }
+         
         }
 
 
@@ -267,50 +222,11 @@ namespace PasswordStuff
         {
             var json = CreateUserFile.GetJson();
             ShowAllUsers();
-            Console.WriteLine("SELECT USER ABOVE (OR PRESS 'Q TO QUIT)");
-            var choice = Console.ReadLine();
-
-            if (choice == "q" || choice == "Q")
+            int user = SelectUser();
+            if (user == -1)
             {
                 return;
             }
-            int num = 0;
-
-            bool valid = int.TryParse(choice, out num);
-
-            if (!valid)
-            {
-                do
-                {
-                    if (!valid)
-                    {
-                        Console.WriteLine("You have to choose a number.");
-                        choice = Console.ReadLine();
-                        if(choice == "q" || choice == "Q")
-                        {
-                            return;
-                        }
-                        valid = int.TryParse(choice, out num);
-
-                    }
-                } while (!valid);
-            }
-
-            if(num > (json.Count - 1) || num < 0)
-            {
-                do
-                {
-                    Console.WriteLine("That user don't exists.");
-                    choice = Console.ReadLine();
-                    if (choice == "q" || choice == "Q")
-                    {
-                        return;
-                    }
-                    valid = int.TryParse(choice, out num);
-
-                } while (num > (json.Count - 1) || num < 0);
-            }
-
 
             Console.WriteLine("SELECT NEW ACCESSLEVEL\n");
             Console.WriteLine(
@@ -344,29 +260,25 @@ namespace PasswordStuff
                 } while (whatAccess != "2" || whatAccess != "1");
             }
 
-
-
-
             if (whatAccess == "1")
             {
 
-                json[num].AccessLevelMod = true;
-                json[num].AccessLevelAdm = false;
-                json[num].AccessLevelOne = false;
+                json[user].AccessLevelMod = true;
+                json[user].AccessLevelAdm = false;
+                json[user].AccessLevelOne = false;
 
             }
 
             if (whatAccess == "2")
             {
-                json[num].AccessLevelMod = false;
-                json[num].AccessLevelAdm = true;
-                json[num].AccessLevelOne = false;
+                json[user].AccessLevelMod = false;
+                json[user].AccessLevelAdm = true;
+                json[user].AccessLevelOne = false;
 
             }
 
             Console.WriteLine("\n\nUSER IS PROMOTED");
             CreateUserFile.UpDate(json);
-
 
         }
 
@@ -378,50 +290,11 @@ namespace PasswordStuff
         {
             var json = CreateUserFile.GetJson();
             ShowAllUsers();
-            Console.WriteLine("SELECT USER ABOVE (OR PRESS 'Q TO QUIT)");
-            var choice = Console.ReadLine();
-
-            if (choice == "q" || choice == "Q")
+            int user = SelectUser();
+            if (user == -1)
             {
                 return;
             }
-            int num = 0;
-
-            bool valid = int.TryParse(choice, out num);
-
-            if (!valid)
-            {
-                do
-                {
-                    if (!valid)
-                    {
-                        Console.WriteLine("You have to choose a number.");
-                        choice = Console.ReadLine();
-                        if (choice == "q" || choice == "Q")
-                        {
-                            return;
-                        }
-                        valid = int.TryParse(choice, out num);
-
-                    }
-                } while (!valid);
-            }
-
-            if (num > (json.Count - 1) || num < -1)
-            {
-                do
-                {
-                    Console.WriteLine("That user don't exists.");
-                    choice = Console.ReadLine();
-                    if (choice == "q" || choice == "Q")
-                    {
-                        return;
-                    }
-                    valid = int.TryParse(choice, out num);
-
-                } while (num > (json.Count - 1) || num < -1);
-            }
-
 
             Console.WriteLine("SELECT NEW ACCESSLEVEL\n");
             Console.WriteLine(
@@ -434,7 +307,6 @@ namespace PasswordStuff
             {
                 return;
             }
-
 
             bool validNumber = int.TryParse(whatAccess, out number);
 
@@ -459,23 +331,22 @@ namespace PasswordStuff
             if (whatAccess == "1")
             {
 
-                json[num].AccessLevelOne = true;
-                json[num].AccessLevelAdm = false;
-                json[num].AccessLevelMod = false;
+                json[user].AccessLevelOne = true;
+                json[user].AccessLevelAdm = false;
+                json[user].AccessLevelMod = false;
 
             }
 
             if (whatAccess == "2")
             {
-                json[num].AccessLevelAdm = false;
-                json[num].AccessLevelMod = true;
-                json[num].AccessLevelOne = false;
+                json[user].AccessLevelAdm = false;
+                json[user].AccessLevelMod = true;
+                json[user].AccessLevelOne = false;
 
             }
 
             Console.WriteLine("\n\nUSER IS DEMOTED");
             CreateUserFile.UpDate(json);
-
 
         }
 
@@ -484,60 +355,22 @@ namespace PasswordStuff
         {
             var json = CreateUserFile.GetJson();
             ShowAllUsers();
-            Console.WriteLine("SELECT USER ABOVE (OR PRESS 'Q TO QUIT)");
-            var choice = Console.ReadLine();
-
-            if (choice == "q" || choice == "Q")
+            int user = SelectUser();
+            if (user == -1)
             {
                 return;
             }
-            int num = 0;
-
-            bool valid = int.TryParse(choice, out num);
-
-            if (!valid)
-            {
-                do
-                {
-                    if (!valid)
-                    {
-                        Console.WriteLine("You have to choose a number.");
-                        choice = Console.ReadLine();
-                        if (choice == "q" || choice == "Q")
-                        {
-                            return;
-                        }
-                        valid = int.TryParse(choice, out num);
-
-                    }
-                } while (!valid);
-            }
-
-            if (num > (json.Count -1) || num < -1)
-            {
-                do
-                {
-                    Console.WriteLine("That user don't exists.");
-                    choice = Console.ReadLine();
-                    if (choice == "q" || choice == "Q")
-                    {
-                        return;
-                    }
-                    valid = int.TryParse(choice, out num);
-
-                } while (num > (json.Count -1)|| num < 0);
-            }
-
             Console.WriteLine("DO YOU WANT DO DELETE THIS USER? Y/N");
             var yesOrNo = Console.ReadLine().ToLower();
 
             if (yesOrNo == "y")
             {
-                json.RemoveAt(num);
+                json.RemoveAt(user);
                 Console.WriteLine("\n\nUSER IS DELETED");
 
             }
-        else {
+            else
+            {
                 return;
             }
 
@@ -574,48 +407,10 @@ namespace PasswordStuff
 
             var json = CreateUserFile.GetJson();
             ShowAllUsers();
-            Console.WriteLine("SELECT USER ABOVE (OR PRESS 'Q TO QUIT)");
-            var choice = Console.ReadLine();
-
-            if (choice == "q" || choice == "Q")
+            int user = SelectUser();
+            if (user == -1)
             {
                 return;
-            }
-            int num = 0;
-
-            bool valid = int.TryParse(choice, out num);
-
-            if (!valid)
-            {
-                do
-                {
-                    if (!valid)
-                    {
-                        Console.WriteLine("You have to choose a number.");
-                        choice = Console.ReadLine();
-                        if (choice == "q" || choice == "Q")
-                        {
-                            return;
-                        }
-                        valid = int.TryParse(choice, out num);
-
-                    }
-                } while (!valid);
-            }
-
-            if (num > (json.Count - 1) || num < 0)
-            {
-                do
-                {
-                    Console.WriteLine("That user don't exists.");
-                    choice = Console.ReadLine();
-                    if (choice == "q" || choice == "Q")
-                    {
-                        return;
-                    }
-                    valid = int.TryParse(choice, out num);
-
-                } while (num > (json.Count - 1) || num < 0);
             }
 
             Console.WriteLine("ENTER NEW USERNAME");
@@ -643,7 +438,7 @@ namespace PasswordStuff
             Console.WriteLine("USERNAME CHANGED");
 
 
-            json[num].UserName = newUserName;
+            json[user].UserName = newUserName;
             CreateUserFile.UpDate(json);
 
 
@@ -651,60 +446,25 @@ namespace PasswordStuff
         }
 
 
-        public static void ChangePassword()
+        public static void ChangeUsersPassword()
         {
             var json = CreateUserFile.GetJson();
-            ShowAllUsers();
-            Console.WriteLine("SELECT USER ABOVE (OR PRESS 'Q TO QUIT)");
-            var choice = Console.ReadLine();
-
-            if (choice == "q" || choice == "Q")
+            int user = SelectUser();
+            if (user == -1)
             {
                 return;
             }
-            int num = 0;
 
-            bool valid = int.TryParse(choice, out num);
-
-            if (!valid)
-            {
-                do
-                {
-                    if (!valid)
-                    {
-                        Console.WriteLine("You have to choose a number.");
-                        choice = Console.ReadLine();
-                        if (choice == "q" || choice == "Q")
-                        {
-                            return;
-                        }
-                        valid = int.TryParse(choice, out num);
-
-                    }
-                } while (!valid);
-            }
-
-            if (num > (json.Count - 1) || num < 0)
-            {
-                do
-                {
-                    Console.WriteLine("That user don't exists.");
-                    choice = Console.ReadLine();
-                    if (choice == "q" || choice == "Q")
-                    {
-                        return;
-                    }
-                    valid = int.TryParse(choice, out num);
-
-                } while (num > (json.Count - 1) || num < 0);
-            }
-
-            Console.WriteLine("ENTER NEW PASSWORD");
+            Console.WriteLine("\nENTER A PASSWORD. (MIN 8 LETTERS, 1 BIG LETTER AND ONE SYMBOL)");
             var newPassword = ReadPassword();
+
             if (newPassword == "q" || newPassword == "Q")
             {
                 return;
             }
+            bool isValid = ValidPassword(newPassword);
+
+
             bool validOrNot = ValidPassword(newPassword);
             if (!validOrNot)
             {
@@ -713,7 +473,7 @@ namespace PasswordStuff
                     Console.WriteLine("\nENTER NEW PASSWORD");
                     newPassword = ReadPassword();
                     validOrNot = ValidPassword(newPassword);
-                    if(newPassword == "q" || newPassword == "Q")
+                    if (newPassword == "q" || newPassword == "Q")
                     {
                         return;
                     }
@@ -723,7 +483,7 @@ namespace PasswordStuff
 
             Console.WriteLine("\n\nPASSWORD CHANGED");
 
-            json[num].Password = newPassword;
+            json[user].Password = newPassword;
             CreateUserFile.UpDate(json);
         }
 
@@ -731,210 +491,30 @@ namespace PasswordStuff
 
 
 
-        public static void ChangeName()
+        public static void ChangeUsersName()
+        {
+            var user = SelectUser();
+            if(user == -1)
+            {
+                return;
+            }
+        }
+
+
+
+
+
+
+        public static void ChangeUsersEmail()
         {
             var json = CreateUserFile.GetJson();
             ShowAllUsers();
-            Console.WriteLine("SELECT USER ABOVE (OR PRESS 'Q TO QUIT)");
-            var choice = Console.ReadLine();
-
-            if (choice == "q" || choice == "Q")
+            int user = SelectUser();
+            if (user == -1)
             {
                 return;
             }
-            int num = 0;
-
-            bool valid = int.TryParse(choice, out num);
-
-            if (!valid)
-            {
-                do
-                {
-                    if (!valid)
-                    {
-                        Console.WriteLine("You have to choose a number.");
-                        choice = Console.ReadLine();
-                        if (choice == "q" || choice == "Q")
-                        {
-                            return;
-                        }
-                        valid = int.TryParse(choice, out num);
-
-                    }
-                } while (!valid);
-            }
-
-            if (num > (json.Count - 1) || num < 0)
-            {
-                do
-                {
-                    Console.WriteLine("That user don't exists.");
-                    choice = Console.ReadLine();
-                    if (choice == "q" || choice == "Q")
-                    {
-                        return;
-                    }
-                    valid = int.TryParse(choice, out num);
-
-                } while (num > (json.Count - 1) || num < 0);
-            }
-
-            Console.WriteLine("ENTER NEW FIRSTNAME");
-            var newFirstName = Console.ReadLine();
-
-            if (newFirstName == "q" || newFirstName == "Q")
-            {
-                return;
-            }
-
-            do
-            {
-
-                if (String.IsNullOrEmpty(newFirstName))
-                {
-                    Console.WriteLine("You have to enter new firstname");
-                    newFirstName = Console.ReadLine();
-
-                    if (newFirstName == "q" || newFirstName == "Q")
-                    {
-                        return;
-                    }
-                }
-            } while (string.IsNullOrEmpty(newFirstName));
-
-
-            Console.WriteLine("ENTER NEW LASTNAME");
-            var newLastName = Console.ReadLine();
-
-            if (newLastName == "q" || newLastName == "Q")
-            {
-                return;
-            }
-
-            do
-            {
-
-                if (String.IsNullOrEmpty(newLastName))
-                {
-                    Console.WriteLine("You have to enter new firstname");
-                    newLastName = Console.ReadLine();
-
-                    if (newLastName == "q" || newLastName == "Q")
-                    {
-                        return;
-                    }
-                }
-            } while (string.IsNullOrEmpty(newLastName));
-
-            Console.WriteLine("\n\nNAME CHANGED");
-
-            json[num].FirstName = newFirstName;
-            json[num].LastName = newLastName;
-
-            CreateUserFile.UpDate(json);
-        }
-
-
-
-
-
-
-        public static void ChangeEmail()
-        {
-            var json = CreateUserFile.GetJson();
-            ShowAllUsers();
-            Console.WriteLine("SELECT USER ABOVE (OR PRESS 'Q TO QUIT)");
-            var choice = Console.ReadLine();
-
-            if (choice == "q" || choice == "Q")
-            {
-                return;
-            }
-            int num = 0;
-
-            bool valid = int.TryParse(choice, out num);
-
-            if (!valid)
-            {
-                do
-                {
-                    if (!valid)
-                    {
-                        Console.WriteLine("You have to choose a number.");
-                        choice = Console.ReadLine();
-                        if (choice == "q" || choice == "Q")
-                        {
-                            return;
-                        }
-                        valid = int.TryParse(choice, out num);
-
-                    }
-                } while (!valid);
-            }
-
-            if (num > (json.Count - 1) || num < 0)
-            {
-                do
-                {
-                    Console.WriteLine("That user don't exists.");
-                    choice = Console.ReadLine();
-                    if (choice == "q" || choice == "Q")
-                    {
-                        return;
-                    }
-                    valid = int.TryParse(choice, out num);
-
-                } while (num > (json.Count - 1) || num < 0);
-            }
-
-            Console.WriteLine("ENTER NEW EMAIL");
-            var newEmail = Console.ReadLine();
-
-            string truey = IsValidEmail(newEmail);
-            if (truey == "-1")
-            {
-                do
-                {
-                    Console.WriteLine("ENTER NEW EMAIL");
-                    newEmail = Console.ReadLine();
-                    truey = IsValidEmail(newEmail);
-
-                } while (truey == "-1");
-            }
-
-            if(truey == "-2")
-            {
-                return;
-            }
-
-
-            Console.WriteLine("\n\nEMAIL CHANGED");
-            json[num].Email = newEmail;
-
-
-            CreateUserFile.UpDate(json);
-        }
-
-
-
-
-
-
-
-
-
-
-
-
-        public static bool IfUserExists(int user)
-        {
-            var json = CreateUserFile.GetJson();
-            if (user > json.Count || user < 0)
-            {
-                Console.WriteLine("\n\nThat user don't exists");
-                return false;
-            }
-            return true;
+            ChangeEmail(user);
         }
 
 
@@ -1057,20 +637,21 @@ namespace PasswordStuff
 
         public static string IsValidEmail(string email)
         {
-
-            do
+            if (String.IsNullOrEmpty(email))
             {
-
-                if (String.IsNullOrEmpty(email))
+                do
                 {
+
                     Console.WriteLine("You have to enter new email");
                     email = Console.ReadLine();
                     if (email == "q" || email == "Q")
                     {
                         return "-2";
                     }
-                }
-            } while (string.IsNullOrEmpty(email));
+
+                } while (email == "");
+
+            }
 
             if (!email.Contains("@") || !email.Contains("."))
             {
@@ -1110,13 +691,12 @@ namespace PasswordStuff
 
         public static bool ValidPassword(string password)
         {
-           
 
             if (password.Length < 8)
             {
                 Console.WriteLine("\nToo short");
                 return false;
-                
+
             }
 
             else if (password.Any(char.IsSymbol) == false && password.Any(char.IsUpper) == false)
@@ -1145,6 +725,246 @@ namespace PasswordStuff
             }
 
         }
+
+    
+
+
+
+        public static void EditOwnProfile(int userIndex)
+        {
+            var json = CreateUserFile.GetJson();
+            Console.WriteLine("\n\nPRESS ENTER TO GO BACK TO MENU" +
+    "\n\n\nMY NAME\n" +
+    json[userIndex].FirstName + " " + json[userIndex].LastName + "\n\n" +
+    "MY EMAIL\n" +
+    json[userIndex].Email + "\n\n" +
+    "MY USERNAME\n" +
+    json[userIndex].UserName + "\n\n" +
+    "MY PASSWORD \n" +
+    json[userIndex].Password);
+
+            Console.WriteLine("\n\n[1] EDIT NAME\n" +
+                "[2] EDIT PASSWORD\n" +
+                "[3] EDIT EMAIL\n");
+            var choice = Console.ReadLine();
+            if (string.IsNullOrEmpty(choice))
+            {
+                return;
+            }
+
+            switch (choice)
+            {
+                case "1": CreateUser.ChangeOwnName(userIndex);
+                    break;
+                case "2":
+                    CreateUser.ChangeOwnPassword(userIndex);
+                break;
+               case "3":
+                    CreateUser.ChangeEmail(userIndex);
+
+                    break;
+                default: Console.WriteLine("Try again");
+                    break;
+            }
+
+            return;
+        }
+
+
+
+
+
+
+
+        public static void ChangeOwnName(int userIndex)
+
+        {
+            var json = CreateUserFile.GetJson();
+            Console.WriteLine("ENTER NEW FIRSTNAME");
+            var newFirstName = Console.ReadLine();
+
+            if (newFirstName == "q" || newFirstName == "Q")
+            {
+                return;
+            }
+
+            do
+            {
+
+                if (String.IsNullOrEmpty(newFirstName))
+                {
+                    Console.WriteLine("You have to enter new firstname");
+                    newFirstName = Console.ReadLine();
+
+                    if (newFirstName == "q" || newFirstName == "Q")
+                    {
+                        return;
+                    }
+                }
+            } while (string.IsNullOrEmpty(newFirstName));
+
+
+            Console.WriteLine("ENTER NEW LASTNAME");
+            var newLastName = Console.ReadLine();
+
+            if (newLastName == "q" || newLastName == "Q")
+            {
+                return;
+            }
+
+            do
+            {
+
+                if (String.IsNullOrEmpty(newLastName))
+                {
+                    Console.WriteLine("You have to enter new firstname");
+                    newLastName = Console.ReadLine();
+
+                    if (newLastName == "q" || newLastName == "Q")
+                    {
+                        return;
+                    }
+                }
+            } while (string.IsNullOrEmpty(newLastName));
+
+            Console.WriteLine("\n\nNAME CHANGED");
+
+            json[userIndex].FirstName = newFirstName;
+            json[userIndex].LastName = newLastName;
+
+            CreateUserFile.UpDate(json);
+
+        }
+
+
+
+        public static int SelectUser()
+        {
+            var json = CreateUserFile.GetJson();
+            ShowAllUsers();
+            Console.WriteLine("SELECT USER ABOVE (OR PRESS 'Q TO QUIT)");
+            var choice = Console.ReadLine();
+
+            if (choice == "q" || choice == "Q")
+            {
+                return -1;
+            }
+            int num = 0;
+
+            bool valid = int.TryParse(choice, out num);
+
+            if (!valid)
+            {
+                do
+                {
+                    if (!valid)
+                    {
+                        Console.WriteLine("You have to choose a number.");
+                        choice = Console.ReadLine();
+                        if (choice == "q" || choice == "Q")
+                        {
+                            return -1;
+                        }
+                        valid = int.TryParse(choice, out num);
+
+                    }
+                } while (!valid);
+            }
+
+            if (num > (json.Count - 1) || num < 0)
+            {
+                do
+                {
+                    Console.WriteLine("That user don't exists.");
+                    choice = Console.ReadLine();
+                    if (choice == "q" || choice == "Q")
+                    {
+                        return -1;
+                    }
+                    valid = int.TryParse(choice, out num);
+
+                } while (num > (json.Count - 1) || num < 0);
+            }
+
+            return num;
+        }
+
+
+        public static void ChangeOwnPassword(int userIndex)
+        {
+            var json = CreateUserFile.GetJson();
+            Console.WriteLine("\nENTER A PASSWORD. (MIN 8 LETTERS, 1 BIG LETTER AND ONE SYMBOL. PRESS 'Q' TO QUIT)");
+            var newPassword = ReadPassword();
+
+            if (newPassword == "q" || newPassword == "Q")
+            {
+                return;
+            }
+            bool isValid = ValidPassword(newPassword);
+
+
+            bool validOrNot = ValidPassword(newPassword);
+            if (!validOrNot)
+            {
+                do
+                {
+                    Console.WriteLine("\nENTER NEW PASSWORD");
+                    newPassword = ReadPassword();
+                    validOrNot = ValidPassword(newPassword);
+                    if (newPassword == "q" || newPassword == "Q")
+                    {
+                        return;
+                    }
+
+                } while (!validOrNot);
+            }
+
+            Console.WriteLine("\n\nPASSWORD CHANGED");
+
+            json[userIndex].Password = newPassword;
+            CreateUserFile.UpDate(json);
+        }
+
+
+
+
+        public static void ChangeEmail(int user)
+        {
+            var json = CreateUserFile.GetJson();
+            Console.WriteLine("ENTER NEW EMAIL");
+            var newEmail = Console.ReadLine();
+
+            string theEmail = IsValidEmail(newEmail);
+
+            if (theEmail == "-1")
+            {
+                do
+                {
+                    Console.WriteLine("ENTER NEW EMAIL");
+                    newEmail = Console.ReadLine();
+                    theEmail = IsValidEmail(newEmail);
+
+                } while (theEmail == "-1");
+            }
+
+            if (theEmail == "-2")
+            {
+                return;
+            }
+
+            newEmail = theEmail;
+
+            Console.WriteLine("\n\nEMAIL CHANGED");
+            json[user].Email = newEmail;
+
+
+            CreateUserFile.UpDate(json);
+        }
+
+
+
+
+       
 
 
 

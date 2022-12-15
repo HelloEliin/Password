@@ -20,6 +20,7 @@ namespace PasswordStuff
         public static void MenuForUserAndMod()
         {
             Console.WriteLine("\n\n[1] MY USERINFO\n" +
+                "[2] EDIT MY PROFILE\n" +
                 "[10] SIGN OUT");
         }
 
@@ -28,10 +29,11 @@ namespace PasswordStuff
         {
             Console.WriteLine(
                 "\n\n[1] MY USERINFO\n" +
-                "[2] VIEW ALL USERS\n" +
-                "[3] MENU FOR USERS\n" +
-                "[4] CREATE NEW USER\n" +
-                "[5] SHOW ALL MODS\n" +
+                "[2] EDIT MY PROFILE\n" +
+                "[3] VIEW ALL USERS\n" +
+                "[4] MENU FOR USERS\n" +
+                "[5] CREATE NEW USER\n" +
+                "[6] SHOW ALL MODS\n" +
                 "[10] SIGN OUT");
         }
 
@@ -98,11 +100,11 @@ namespace PasswordStuff
                     break;
                 case "2": CreateUser.ChangeUsername();
                     break;
-                case "3": CreateUser.ChangePassword();
+                case "3": CreateUser.ChangeUsersPassword();
                     break;
-                case "4": CreateUser.ChangeName();
+                case "4": CreateUser.ChangeUsersName();
                     break;
-                case "5": CreateUser.ChangeEmail();
+                case "5": CreateUser.ChangeUsersEmail();
                     break;
             }
         }
@@ -133,21 +135,25 @@ namespace PasswordStuff
                 case "1":
                     CreateUser.ShowMyUserInfo(userIndex);
                     break;
-                case "2":  
-                    if (json[userIndex].AccessLevelMod == true || json[userIndex].AccessLevelOne == true)
+                case "2":
+                       CreateUser.EditOwnProfile(userIndex);
+                        Menus.UserSystemMenu(userIndex);
+                    
+                    break;
+                    case"3":
+                    if (json[userIndex].AccessLevelAdm == true)
+                    {
+                        CreateUser.ShowAllUsers();
+                        Menus.UserSystemMenu(userIndex);
+                    }
+                    else
                     {
                         Console.WriteLine("Try again");
                         Menus.UserSystemMenu(userIndex);
                     }
-
-                    if (json[userIndex].AccessLevelAdm == true)
-                    {
-                       CreateUser.ShowAllUsers();
-                        Menus.UserSystemMenu(userIndex);
-                    }
                     break;
 
-                case "3":
+                case "4":
                     if(json[userIndex].AccessLevelAdm == true)
                     {
                         Menus.AdmSubMenu();
@@ -160,7 +166,7 @@ namespace PasswordStuff
                     }
 
                     break;
-                case "4":
+                case "5":
                     if (json[userIndex].AccessLevelAdm == true)
                     {
                         CreateUser.CreateNewUser();
@@ -174,7 +180,7 @@ namespace PasswordStuff
                     }
 
                     break;
-                case "5": if(json[userIndex].AccessLevelAdm == true)
+                case "6": if(json[userIndex].AccessLevelAdm == true)
                     {
 
                         CreateUser.ShowAllMods();
