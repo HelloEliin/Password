@@ -610,8 +610,12 @@ namespace PasswordStuff
         public static void SearchUser()
         {
             var json = CreateUserFile.GetJson();
-            Console.WriteLine("ENTER USERNAME TO SEARCH FOR\n");
+            Console.WriteLine("ENTER USERNAME TO SEARCH FOR (OR PRESS 'Q' TO QUIT\n");
             var userToSearch = Console.ReadLine();
+            if(userToSearch == "q" || userToSearch == "Q")
+            {
+                return;
+            }
 
             for (int i = 0; i < json.Count; i++)
             {
@@ -620,8 +624,8 @@ namespace PasswordStuff
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine("\n\nUSER FOUND\n");
                     Console.ForegroundColor = ConsoleColor.White;
-                    Console.WriteLine(json[i].UserName + "\n\n" +
-                        "AT POSITION  " + "[" + i + "]" + "  IN USERFILE");
+                    Console.WriteLine(" '" + json[i].UserName + "' " +
+                        "at position  " + "[" + i + "]" + "  in usersystemfile");
                     return;
                 }
             }
@@ -817,7 +821,7 @@ namespace PasswordStuff
 
                 if (String.IsNullOrEmpty(newLastName))
                 {
-                    Console.WriteLine("You have to enter new firstname");
+                    Console.WriteLine("You have to enter new lastname");
                     newLastName = Console.ReadLine();
 
                     if (newLastName == "q" || newLastName == "Q")
@@ -859,7 +863,7 @@ namespace PasswordStuff
                 {
                     if (!valid)
                     {
-                        Console.WriteLine("You have to choose a number.");
+                        Console.WriteLine("You have to choose a number");
                         choice = Console.ReadLine();
                         if (choice == "q" || choice == "Q")
                         {
