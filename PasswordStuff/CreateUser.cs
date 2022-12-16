@@ -498,6 +498,8 @@ namespace PasswordStuff
             {
                 return;
             }
+
+            ChangeOwnName(user);
         }
 
 
@@ -565,7 +567,7 @@ namespace PasswordStuff
 
                 else if (info.Key == ConsoleKey.Backspace)
                 {
-                    if (!string.IsNullOrEmpty(password))
+                    if (!string.IsNullOrWhiteSpace(password))
                     {
                         password = password.Substring(0, password.Length - 1);
                         int pos = Console.CursorLeft;
@@ -642,6 +644,7 @@ namespace PasswordStuff
         }
 
         public static string IsValidEmail(string email)
+
         {
             if (String.IsNullOrWhiteSpace(email))
             {
@@ -659,7 +662,7 @@ namespace PasswordStuff
 
             }
 
-            if (!email.Contains("@") || !email.Contains("."))
+            if (!email.Contains("@") || !email.Contains(".") || email.Any(char.IsWhiteSpace))
             {
                 do
                 {
@@ -669,7 +672,7 @@ namespace PasswordStuff
                     {
                         return "-2";
                     }
-                } while (!email.Contains("@") || !email.Contains("."));
+                } while (!email.Contains("@") || !email.Contains(".") || email.Any(char.IsWhiteSpace));
 
             }
 
@@ -697,7 +700,11 @@ namespace PasswordStuff
 
         public static bool ValidPassword(string password)
         {
-
+            if(password.Any(char.IsWhiteSpace))
+            {
+                Console.WriteLine("No whitespace allowed");
+                return false;
+            }
             if (password.Length < 8)
             {
                 Console.WriteLine("\nToo short");
@@ -848,7 +855,7 @@ namespace PasswordStuff
         {
             var json = CreateUserFile.GetJson();
             ShowAllUsers();
-            Console.WriteLine("SELECT USER ABOVE (OR PRESS 'Q TO QUIT)");
+            Console.WriteLine("SELECT USER ABOVE (OR PRESS 'Q' TO QUIT)");
             var choice = Console.ReadLine();
 
             if (choice == "q" || choice == "Q")
@@ -935,8 +942,12 @@ namespace PasswordStuff
         public static void ChangeEmail(int user)
         {
             var json = CreateUserFile.GetJson();
-            Console.WriteLine("ENTER NEW EMAIL");
+            Console.WriteLine("ENTER NEW EMAIL (OR PRESS 'Q' TO QUIT");
             var newEmail = Console.ReadLine();
+            if(newEmail == "q" || newEmail == "Q")
+            {
+                return;
+            }
 
             string theEmail = IsValidEmail(newEmail);
 
