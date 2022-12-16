@@ -36,7 +36,7 @@ namespace PasswordStuff
                 return;
             }
 
-            if (String.IsNullOrWhiteSpace(userName))
+            if (String.IsNullOrWhiteSpace(userName) || userName.Any(char.IsWhiteSpace))
             {
                 do
                 {
@@ -46,7 +46,7 @@ namespace PasswordStuff
                     {
                         return;
                     }
-                } while (userName == "");
+                } while (userName == "" || userName.Any(char.IsWhiteSpace));
             }
 
 
@@ -79,7 +79,7 @@ namespace PasswordStuff
                 return;
             }
 
-            if (String.IsNullOrEmpty(firstName))
+            if (String.IsNullOrEmpty(firstName) || firstName.Any(char.IsWhiteSpace))
             {
                 do
                 {
@@ -89,7 +89,7 @@ namespace PasswordStuff
                     {
                         return;
                     }
-                } while (firstName == "");
+                } while (firstName == "" || firstName.Any(char.IsWhiteSpace));
 
             }
 
@@ -103,7 +103,7 @@ namespace PasswordStuff
                 return;
             }
 
-            if (String.IsNullOrWhiteSpace(lastName))
+            if (String.IsNullOrWhiteSpace(lastName) || lastName.Any(char.IsWhiteSpace))
             {
                 do
                 {
@@ -113,7 +113,7 @@ namespace PasswordStuff
                     {
                         return;
                     }
-                } while (lastName == "");
+                } while (lastName == "" || lastName.Any(char.IsWhiteSpace));
 
             }
 
@@ -196,7 +196,7 @@ namespace PasswordStuff
         public static void ShowMyUserInfo(int user)
         {
             var json = CreateUserFile.GetJson();
-            Console.WriteLine("\n\nPRESS ENTER TO GO BACK TO MENU" +
+            Console.WriteLine(
                 "\n\n\nMY NAME\n" +
                 json[user].FirstName + " " + json[user].LastName + "\n\n" +
                 "MY EMAIL\n" +
@@ -205,13 +205,6 @@ namespace PasswordStuff
                 json[user].UserName + "\n\n" +
                 "MY PASSWORD \n" +
                 json[user].Password);
-
-            var choice = Console.ReadLine().ToLower();
-            if (choice == "")
-            {
-                Menus.UserSystemMenu(user);
-                return;
-            }
          
         }
 
@@ -614,7 +607,7 @@ namespace PasswordStuff
         public static void SearchUser()
         {
             var json = CreateUserFile.GetJson();
-            Console.WriteLine("\n\nENTER USERNAME TO SEARCH FOR (OR PRESS 'Q' TO QUIT\n");
+            Console.WriteLine("\n\nENTER USERNAME TO SEARCH FOR (OR PRESS 'Q' TO QUIT)\n");
             var userToSearch = Console.ReadLine();
             if(userToSearch == "q" || userToSearch == "Q")
             {
@@ -804,7 +797,7 @@ namespace PasswordStuff
             do
             {
 
-                if (String.IsNullOrWhiteSpace(newFirstName))
+                if (String.IsNullOrWhiteSpace(newFirstName) || newFirstName.Any(char.IsWhiteSpace))
                 {
                     Console.WriteLine("You have to enter new firstname");
                     newFirstName = Console.ReadLine();
@@ -814,7 +807,7 @@ namespace PasswordStuff
                         return;
                     }
                 }
-            } while (string.IsNullOrEmpty(newFirstName));
+            } while (string.IsNullOrEmpty(newFirstName) || newFirstName.Any(char.IsWhiteSpace));
 
 
             Console.WriteLine("ENTER NEW LASTNAME");
@@ -828,7 +821,7 @@ namespace PasswordStuff
             do
             {
 
-                if (String.IsNullOrWhiteSpace(newLastName))
+                if (String.IsNullOrWhiteSpace(newLastName) || newLastName.Any(char.IsWhiteSpace))
                 {
                     Console.WriteLine("You have to enter new lastname");
                     newLastName = Console.ReadLine();
@@ -838,7 +831,7 @@ namespace PasswordStuff
                         return;
                     }
                 }
-            } while (string.IsNullOrEmpty(newLastName));
+            } while (string.IsNullOrEmpty(newLastName) || newLastName.Any(char.IsWhiteSpace));
 
             Console.WriteLine("\n\nNAME CHANGED");
 

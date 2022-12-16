@@ -134,6 +134,7 @@ namespace PasswordStuff
             {
                 case "1":
                     CreateUser.ShowMyUserInfo(userIndex);
+                    Menus.UserSystemMenu(userIndex);
                     break;
                 case "2":
                        CreateUser.EditOwnProfile(userIndex);
